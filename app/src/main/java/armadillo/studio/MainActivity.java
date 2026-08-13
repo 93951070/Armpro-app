@@ -77,6 +77,7 @@ import armadillo.studio.adapter.TreeAdapter;
 import armadillo.studio.common.base.callback.DowCallBack;
 import armadillo.studio.common.base.callback.SocketCallBack;
 import armadillo.studio.common.base.callback.TreeNodeCall;
+import armadillo.studio.common.config.AppConfig;
 import armadillo.studio.common.log.logger;
 import armadillo.studio.common.manager.UserDetailManager;
 import armadillo.studio.common.utils.AppUtils;
@@ -142,7 +143,7 @@ public class MainActivity extends AppCompatActivity {
                                 Button ok = (Button) view;
                                 ok.setEnabled(false);
                                 DownloadUtil.get().download(
-                                        "http://" + CloudApp.getContext().getResources().getString(R.string.host) + ":8000/ver?key=" + ver.getData().get(0).getVersion().toString(),
+                                        AppConfig.HTTP_BASE_URL + "/ver?key=" + ver.getData().get(0).getVersion().toString(),
                                         new File(CloudApp.getContext().getExternalCacheDir() + File.separator + "update.apk"),
                                         new DowCallBack() {
                                             @Override
@@ -638,7 +639,7 @@ public class MainActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 e.printStackTrace();
                 LoadingDialog.getInstance().hide();
-                Toast.makeText(this, R.string.google_login_failed, Toast.LENGTH_LONG).show();
+                Toast.makeText(this, AppConfig.GOOGLE_LOGIN_FAILED, Toast.LENGTH_LONG).show();
             }
         } else if (baseUiListener != null) {
             Tencent.onActivityResultData(requestCode, resultCode, data, baseUiListener);

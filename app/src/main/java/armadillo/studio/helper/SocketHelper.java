@@ -46,7 +46,7 @@ import java.util.zip.GZIPOutputStream;
 
 import armadillo.studio.BuildConfig;
 import armadillo.studio.CloudApp;
-import armadillo.studio.R;
+import armadillo.studio.common.config.AppConfig;
 import armadillo.studio.common.base.BaseSocket;
 import armadillo.studio.common.base.callback.SocketCallBack;
 import armadillo.studio.common.base.callback.TaskCallBack;
@@ -154,7 +154,7 @@ public class SocketHelper {
                 logger.d(String.format("content: %d", socket.getS_port()));
                 if (!socket.isConnected()) {
                     if (socketCallBack != null)
-                        Error(socket, socketCallBack, new ConnectException(CloudApp.getContext().getString(R.string.connection_fail)));
+                        Error(socket, socketCallBack, new ConnectException(AppConfig.CONNECTION_FAIL));
                 } else {
                     try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
                          DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));) {
@@ -175,7 +175,7 @@ public class SocketHelper {
                         int dataLen = MaxLen + uuidLen + 4;
                         int signLen = 128;
 
-                        PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.decode(CloudApp.getContext().getString(R.string.sign_key), Base64.NO_WRAP));
+                        PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.decode(AppConfig.RSA_PRIVATE_KEY, Base64.NO_WRAP));
                         KeyFactory keyf = KeyFactory.getInstance("RSA");
                         PrivateKey priKey = keyf.generatePrivate(priPKCS8);
                         Signature signature = Signature.getInstance("SHA1WithRSA");
@@ -226,8 +226,8 @@ public class SocketHelper {
                             inputStream.close();
                         }
                         if (!cancellationHandler.isCancelled()) {
-                            signature.update("Armadillo".getBytes(StandardCharsets.UTF_8));
-                            signature.update(CloudApp.getContext().getString(R.string.tencent_appid).getBytes(StandardCharsets.UTF_8));
+                            signature.update(AppConfig.SIGN_MAGIC);
+                            signature.update(AppConfig.TENCENT_APPID.getBytes(StandardCharsets.UTF_8));
                             byte[] sign = signature.sign();
                             dataOutputStream.write(sign);
                             dataOutputStream.flush();
@@ -237,7 +237,7 @@ public class SocketHelper {
                     } catch (Exception e) {
                         e.printStackTrace();
                         if (socketCallBack != null)
-                            Error(socket, socketCallBack, new IOException(CloudApp.getContext().getString(R.string.connection_fail)));
+                            Error(socket, socketCallBack, new IOException(AppConfig.CONNECTION_FAIL));
                     } finally {
                         try {
                             socket.close();
@@ -632,7 +632,7 @@ public class SocketHelper {
                 logger.d(String.format("content: %d", socket.getS_port()));
                 if (!socket.isConnected()) {
                     if (socketCallBack != null)
-                        Error(socket, socketCallBack, new ConnectException(CloudApp.getContext().getString(R.string.connection_fail)));
+                        Error(socket, socketCallBack, new ConnectException(AppConfig.CONNECTION_FAIL));
                     return;
                 }
                 try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
@@ -649,7 +649,7 @@ public class SocketHelper {
                 } catch (Exception e) {
                     e.printStackTrace();
                     if (socketCallBack != null)
-                        Error(socket, socketCallBack, new IOException(CloudApp.getContext().getString(R.string.connection_fail)));
+                        Error(socket, socketCallBack, new IOException(AppConfig.CONNECTION_FAIL));
                 } finally {
                     try {
                         socket.close();
@@ -660,7 +660,7 @@ public class SocketHelper {
             } catch (Exception e) {
                 e.printStackTrace();
                 if (socketCallBack != null)
-                    Error(null, socketCallBack, new IOException(CloudApp.getContext().getString(R.string.connection_fail)));
+                    Error(null, socketCallBack, new IOException(AppConfig.CONNECTION_FAIL));
             }
         });
     }
@@ -701,7 +701,7 @@ public class SocketHelper {
         if (!encryption)
             return jsonObject.toString().getBytes();
         else
-            return RSAUtils.encrypt(jsonObject.toString().getBytes(), RSAUtils.getPrivateKey(Base64.decode(CloudApp.getContext().getString(R.string.sign_key), Base64.NO_WRAP)));
+            return RSAUtils.encrypt(jsonObject.toString().getBytes(), RSAUtils.getPrivateKey(Base64.decode(AppConfig.RSA_PRIVATE_KEY, Base64.NO_WRAP)));
     }
 
     /**
@@ -723,16 +723,16 @@ public class SocketHelper {
             dataInputStream.readFully(magic_bytes);
             String server_magic = new String(magic_bytes, StandardCharsets.UTF_8);
             if (!server_magic.equals(magic))
-                Error(socket, socketCallBack, new MagicException(CloudApp.getContext().getString(R.string.request_exception)));
+                Error(socket, socketCallBack, new MagicException(AppConfig.REQUEST_EXCEPTION));
             else {
                 int len = dataInputStream.readInt();
                 byte[] bytes = new byte[len];
                 dataInputStream.readFully(bytes);
-                Next(socket, socketCallBack, new String(RSAUtils.decrypt(bytes, RSAUtils.getPublicKey(Base64.decode(CloudApp.getContext().getString(R.string.key).getBytes(), Base64.NO_WRAP))), StandardCharsets.UTF_8), clz);
+                Next(socket, socketCallBack, new String(RSAUtils.decrypt(bytes, RSAUtils.getPublicKey(Base64.decode(AppConfig.RSA_PUBLIC_KEY.getBytes(), Base64.NO_WRAP))), StandardCharsets.UTF_8), clz);
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Error(socket, socketCallBack, new IOException(CloudApp.getContext().getString(R.string.request_exception)));
+            Error(socket, socketCallBack, new IOException(AppConfig.REQUEST_EXCEPTION));
         }
     }
 
@@ -752,7 +752,7 @@ public class SocketHelper {
                     socketCallBack.next(new Gson().fromJson(body, (Type) clz));
                 } catch (Exception e) {
                     e.printStackTrace();
-                    Error(socket, callBack, new JsonParseException(CloudApp.getContext().getString(R.string.parsing_failed)));
+                    Error(socket, callBack, new JsonParseException(AppConfig.PARSING_FAILED));
                 }
             } else if (callBack instanceof TaskCallBack) {
                 try {
@@ -801,9 +801,9 @@ public class SocketHelper {
             socket.setTcpNoDelay(true);
             socket.setSoTimeout(timeout);
             socket.setKeepAlive(true);
-            socket.setReceiveBufferSize(1024 * 1024 * 20);
-            socket.setSendBufferSize(1024 * 1024 * 20);
-            socket.connect(new InetSocketAddress(InetAddress.getByName(CloudApp.getContext().getString(R.string.host)), socket.getS_port()), 10000);
+            socket.setReceiveBufferSize(1024 * 256);
+            socket.setSendBufferSize(1024 * 256);
+            socket.connect(new InetSocketAddress(InetAddress.getByName(AppConfig.HOST), socket.getS_port()), 10000);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -817,8 +817,8 @@ public class SocketHelper {
      */
     private static int getRandom() {
         Random random = new Random();
-        int max = CloudApp.getContext().getResources().getInteger(R.integer.endprot);
-        int min = CloudApp.getContext().getResources().getInteger(R.integer.startprot);
+        int max = AppConfig.END_PORT;
+        int min = AppConfig.START_PORT;
         int result = random.nextInt(max) % (max - min + 1) + min;
         Set<String> fail = share.getStringSet("fail", new HashSet<>());
         if (Objects.requireNonNull(fail).size() >= max - min) {

@@ -34,6 +34,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import armadillo.studio.activity.Debug;
+import armadillo.studio.common.config.AppConfig;
 import armadillo.studio.common.utils.StreamUtils;
 import armadillo.studio.model.signer.KeyInfo;
 import sun1.security.provider.JavaProvider;
@@ -90,7 +91,7 @@ public class CloudApp extends Application implements Thread.UncaughtExceptionHan
                 .useHttps(true)
                 .responseTimeout(60)
                 .build());
-        tencent = Tencent.createInstance(getString(R.string.tencent_appid), this);
+        tencent = Tencent.createInstance(AppConfig.TENCENT_APPID, this);
         File debugJks = new File(System.getProperty("jks.dir"), "default.key");
         if (!debugJks.exists()) {
             try (FileOutputStream debug = new FileOutputStream(debugJks)) {

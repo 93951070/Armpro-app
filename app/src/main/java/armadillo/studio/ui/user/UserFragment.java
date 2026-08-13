@@ -37,6 +37,7 @@ import armadillo.studio.CloudApp;
 import armadillo.studio.R;
 import armadillo.studio.common.base.BaseFragment;
 import armadillo.studio.common.base.callback.SocketCallBack;
+import armadillo.studio.common.config.AppConfig;
 import armadillo.studio.common.utils.GlideRoundTransform;
 import armadillo.studio.common.manager.UserDetailManager;
 import armadillo.studio.helper.SocketHelper;
@@ -292,7 +293,7 @@ public class UserFragment extends BaseFragment<UserViewModel> {
             case R.id.menu_email: {
                 Intent intent = new Intent(Intent.ACTION_SENDTO);
                 intent.setData(Uri.parse("mailto:"));
-                intent.putExtra(Intent.EXTRA_EMAIL, R.string.nav_header_subtitle);
+                intent.putExtra(Intent.EXTRA_EMAIL, new String[]{AppConfig.CONTACT_EMAIL});
                 intent.putExtra(Intent.EXTRA_SUBJECT, "Ultima");
                 if (intent.resolveActivity(requireActivity().getPackageManager()) != null)
                     startActivity(intent);

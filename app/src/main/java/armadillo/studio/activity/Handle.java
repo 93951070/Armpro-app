@@ -99,8 +99,7 @@ public class Handle extends BaseActivity<List<Object>> {
     RecyclerView recycler;
     @BindView(R.id.submit)
     FloatingActionButton submit;
-    @BindInt(R.integer.upload_max)
-    int max;
+    int max = armadillo.studio.common.config.AppConfig.UPLOAD_MAX;
     private HandleAdapter<?> handleAdapter;
     private final JsonObject rule = new JsonObject();
     private String Path;

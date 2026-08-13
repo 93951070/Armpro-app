@@ -5,7 +5,11 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/spacing_small"
+    android:paddingTop="@dimen/spacing_small"
+    android:paddingEnd="@dimen/spacing_small"
+    android:paddingBottom="@dimen/spacing_small">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardview"
@@ -13,31 +17,32 @@
         android:layout_height="wrap_content"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="2dp"
+        app:cardBackgroundColor="@color/card_bg"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp"
         app:cardPreventCornerOverlap="true"
         app:cardUseCompatPadding="true"
-        app:contentPadding="@dimen/dp_4">
+        app:contentPadding="@dimen/spacing_middle">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/spacing_small"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/avatar"
-                android:layout_width="55dp"
-                android:layout_height="55dp"
-                android:layout_marginEnd="2dp"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_marginEnd="@dimen/spacing_middle"
                 tools:src="@mipmap/ic_launcher" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/dp_4"
+                android:layout_marginStart="@dimen/spacing_small"
                 android:orientation="vertical">
 
                 <!--名字/时间-->
@@ -55,8 +60,8 @@
                         android:gravity="start|center"
                         android:singleLine="true"
                         android:textAppearance="?attr/textAppearanceListItem"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="12sp"
+                        android:textColor="@color/text_primary"
+                        android:textSize="14sp"
                         android:textStyle="bold"
                         tools:text="标题" />
 
@@ -67,7 +72,8 @@
                         android:layout_marginTop="2dp"
                         android:gravity="center_horizontal|end"
                         android:singleLine="true"
-                        android:textSize="9sp"
+                        android:textColor="@color/text_hint"
+                        android:textSize="10sp"
                         tools:ignore="SmallSp,TextSize"
                         tools:text="分钟" />
 
@@ -82,7 +88,8 @@
                     android:layout_weight="1"
                     android:gravity="start|center"
                     android:singleLine="true"
-                    android:textSize="9sp"
+                    android:textColor="@color/text_secondary"
+                    android:textSize="10sp"
                     tools:ignore="SmallSp,TextSize"
                     tools:text="包名" />
 
@@ -111,8 +118,8 @@
                         android:layout_marginStart="2dp"
                         android:gravity="start|center"
                         android:singleLine="true"
-                        android:textColor="@color/colorAccent"
-                        android:textSize="9sp"
+                        android:textColor="@color/success"
+                        android:textSize="10sp"
                         tools:ignore="SmallSp,TextSize"
                         tools:text="完成" />
                 </LinearLayout>

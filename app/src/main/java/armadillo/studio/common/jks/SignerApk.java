@@ -64,6 +64,9 @@ public class SignerApk {
                 case V2:
                     builder.setV2SigningEnabled(true);
                     break;
+                case V3:
+                    builder.setV3SigningEnabled(true);
+                    break;
             }
         }
         ApkSigner ApkSigner = builder.build();

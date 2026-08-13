@@ -63,6 +63,7 @@ import armadillo.studio.adapter.TaskAdapter;
 import armadillo.studio.common.base.BaseFragment;
 import armadillo.studio.common.base.callback.DowCallBack;
 import armadillo.studio.common.base.callback.SocketCallBack;
+import armadillo.studio.common.config.AppConfig;
 import armadillo.studio.common.enums.SeleteFileType;
 import armadillo.studio.common.enums.SignerEnums;
 import armadillo.studio.common.jks.SignerApk;
@@ -166,7 +167,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel> implements SwipeRe
                             if (!ArchiveZip.isZipFile(sussecc)) {
                                 Toast.makeText(requireActivity(), R.string.dow_res, Toast.LENGTH_LONG).show();
                                 LoadingDialog.getInstance().showProgress(requireActivity());
-                                DownloadUtil.get().download("http://" + CloudApp.getContext().getResources().getString(R.string.host) + ":8000/file?key=" + taskInfo.getUuid(), taskInfo.getOld(), new DowCallBack() {
+                                DownloadUtil.get().download(AppConfig.HTTP_BASE_URL + "/file?key=" + taskInfo.getUuid(), taskInfo.getOld(), new DowCallBack() {
                                     @Override
                                     public void onStart() {
 
@@ -242,6 +243,15 @@ public class HomeFragment extends BaseFragment<HomeViewModel> implements SwipeRe
                                                         break;
                                                     case 2:
                                                         signer_type = SignerEnums.V2.getType();
+                                                        break;
+                                                    case 3:
+                                                        signer_type = SignerEnums.V1.getType() | SignerEnums.V2.getType() | SignerEnums.V3.getType();
+                                                        break;
+                                                    case 4:
+                                                        signer_type = SignerEnums.V2.getType() | SignerEnums.V3.getType();
+                                                        break;
+                                                    case 5:
+                                                        signer_type = SignerEnums.V3.getType();
                                                         break;
                                                 }
                                                 ArchiveZip.ArchiveOld(
@@ -579,6 +589,15 @@ public class HomeFragment extends BaseFragment<HomeViewModel> implements SwipeRe
                             break;
                         case 2:
                             signer_type = SignerEnums.V2.getType();
+                            break;
+                        case 3:
+                            signer_type = SignerEnums.V1.getType() | SignerEnums.V2.getType() | SignerEnums.V3.getType();
+                            break;
+                        case 4:
+                            signer_type = SignerEnums.V2.getType() | SignerEnums.V3.getType();
+                            break;
+                        case 5:
+                            signer_type = SignerEnums.V3.getType();
                             break;
                     }
                     try {

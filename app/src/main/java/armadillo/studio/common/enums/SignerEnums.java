@@ -9,7 +9,8 @@ import org.jetbrains.annotations.NotNull;
 
 public enum SignerEnums {
     V1(0x1),
-    V2(0x2);
+    V2(0x2),
+    V3(0x4);
     private final int type;
 
     SignerEnums(int type) {

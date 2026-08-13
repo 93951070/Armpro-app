@@ -19,6 +19,7 @@ import java.util.List;
 
 import armadillo.studio.CloudApp;
 import armadillo.studio.R;
+import armadillo.studio.common.config.AppConfig;
 import armadillo.studio.common.enums.SoftEnums;
 import armadillo.studio.ui.software.SoftwareLiveDate;
 import armadillo.studio.common.utils.GlideRoundTransform;
@@ -51,7 +52,7 @@ public class SoftwareAdapter extends BaseQuickAdapter<SoftwareLiveDate, BaseView
         } else
             baseViewHolder.setText(R.id.model, String.format(CloudApp.getContext().getString(R.string.soft_mode), CloudApp.getContext().getString(R.string.soft_mode_null)));
         Glide.with(CloudApp.getContext())
-                .load("http://" + CloudApp.getContext().getResources().getString(R.string.host) + ":8000/get?key=" + data.getData().getAppkey())
+                .load(AppConfig.HTTP_BASE_URL + "/get?key=" + data.getData().getAppkey())
                 .transform(new CenterCrop(), new GlideRoundTransform())
                 .into((ImageView) baseViewHolder.getView(R.id.avatar));
     }

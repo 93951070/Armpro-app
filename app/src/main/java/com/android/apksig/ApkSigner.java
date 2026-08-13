@@ -86,6 +86,7 @@ public class ApkSigner {
     private final Integer mMinSdkVersion;
     private final boolean mV1SigningEnabled;
     private final boolean mV2SigningEnabled;
+    private final boolean mV3SigningEnabled;
     private final boolean mOtherSignersSignaturesPreserved;
     private final String mCreatedBy;
 
@@ -103,6 +104,7 @@ public class ApkSigner {
             Integer minSdkVersion,
             boolean v1SigningEnabled,
             boolean v2SigningEnabled,
+            boolean v3SigningEnabled,
             boolean otherSignersSignaturesPreserved,
             String createdBy,
             ApkSignerEngine signerEngine,
@@ -116,6 +118,7 @@ public class ApkSigner {
         mMinSdkVersion = minSdkVersion;
         mV1SigningEnabled = v1SigningEnabled;
         mV2SigningEnabled = v2SigningEnabled;
+        mV3SigningEnabled = v3SigningEnabled;
         mOtherSignersSignaturesPreserved = otherSignersSignaturesPreserved;
         mCreatedBy = createdBy;
 
@@ -254,6 +257,7 @@ public class ApkSigner {
                     new DefaultApkSignerEngine.Builder(engineSignerConfigs, minSdkVersion)
                             .setV1SigningEnabled(mV1SigningEnabled)
                             .setV2SigningEnabled(mV2SigningEnabled)
+                            .setV3SigningEnabled(mV3SigningEnabled)
                             .setOtherSignersSignaturesPreserved(mOtherSignersSignaturesPreserved);
             if (mCreatedBy != null) {
                 signerEngineBuilder.setCreatedBy(mCreatedBy);
@@ -828,6 +832,7 @@ public class ApkSigner {
         private final List<SignerConfig> mSignerConfigs;
         private boolean mV1SigningEnabled = true;
         private boolean mV2SigningEnabled = true;
+        private boolean mV3SigningEnabled = true;
         private boolean mOtherSignersSignaturesPreserved;
         private String mCreatedBy;
         private Integer mMinSdkVersion;
@@ -1033,6 +1038,32 @@ public class ApkSigner {
         }
 
         /**
+         * Sets whether the APK should be signed using APK Signature Scheme v3 (aka v3 signature
+         * scheme).
+         *
+         * <p>By default, whether APK is signed using APK Signature Scheme v3 is determined by
+         * {@code ApkSigner} based on the platform versions supported by the APK or specified using
+         * {@link #setMinSdkVersion(int)}.
+         *
+         * <p><em>Note:</em> This method may only be invoked when this builder is not initialized
+         * with an {@link ApkSignerEngine}.
+         *
+         * @param enabled {@code true} to require the APK to be signed using APK Signature Scheme
+         *        v3, {@code false} to require the APK to not be signed using APK Signature Scheme
+         *        v3.
+         *
+         * @throws IllegalStateException if this builder was initialized with an
+         *         {@link ApkSignerEngine}
+         *
+         * @see <a href="https://source.android.com/security/apksigning/v3.html">APK Signature Scheme v3</a>
+         */
+        public Builder setV3SigningEnabled(boolean enabled) {
+            checkInitializedWithoutEngine();
+            mV3SigningEnabled = enabled;
+            return this;
+        }
+
+        /**
          * Sets whether signatures produced by signers other than the ones configured in this engine
          * should be copied from the input APK to the output APK.
          *
@@ -1085,6 +1116,7 @@ public class ApkSigner {
                     mMinSdkVersion,
                     mV1SigningEnabled,
                     mV2SigningEnabled,
+                    mV3SigningEnabled,
                     mOtherSignersSignaturesPreserved,
                     mCreatedBy,
                     mSignerEngine,

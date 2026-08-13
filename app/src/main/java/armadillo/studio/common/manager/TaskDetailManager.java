@@ -21,6 +21,8 @@ import armadillo.studio.ui.home.TaskLiveData;
 public class TaskDetailManager {
     private final HashSet<TaskLiveData> observers = new HashSet<>();
     private final HashMap<String, ScheduledFuture<?>> futureHashMap = new HashMap<>();
+    private final ScheduledExecutorService scheduledThreadPool =
+            Executors.newScheduledThreadPool(4);
     private volatile static TaskDetailManager instance;
 
     public static TaskDetailManager getInstance() {
@@ -41,7 +43,6 @@ public class TaskDetailManager {
         }
         logger.d(String.format("添加轮询任务:%s", data.getTask().getName()));
         observers.add(data);
-        ScheduledExecutorService scheduledThreadPool = Executors.newSingleThreadScheduledExecutor();
         ScheduledFuture<?> future = scheduledThreadPool.scheduleWithFixedDelay(() -> {
             SocketHelper.SysHelper.GetTaskInfo(body -> {
                 if (body.getCode() == 200) {
@@ -73,9 +74,10 @@ public class TaskDetailManager {
 
     public void unregister(TaskLiveData data) {
         observers.remove(data);
-        if (futureHashMap.get(data.getTask().getUuid()) != null) {
+        ScheduledFuture<?> future = futureHashMap.get(data.getTask().getUuid());
+        if (future != null) {
             logger.d(String.format("取消任务:%s", data.getTask().getName()));
-            Objects.requireNonNull(futureHashMap.get(data.getTask().getUuid())).cancel(true);
+            future.cancel(true);
         }
         futureHashMap.remove(data.getTask().getUuid());
     }

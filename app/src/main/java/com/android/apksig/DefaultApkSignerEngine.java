@@ -20,6 +20,7 @@ import com.android.apksig.apk.ApkFormatException;
 import com.android.apksig.internal.apk.v1.DigestAlgorithm;
 import com.android.apksig.internal.apk.v1.V1SchemeSigner;
 import com.android.apksig.internal.apk.v2.V2SchemeSigner;
+import com.android.apksig.internal.apk.v3.V3SchemeSigner;
 import com.android.apksig.internal.util.MessageDigestSink;
 import com.android.apksig.internal.util.Pair;
 import com.android.apksig.util.DataSink;
@@ -27,6 +28,8 @@ import com.android.apksig.util.DataSinks;
 import com.android.apksig.util.DataSource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -60,14 +63,25 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
     //    emits the v1 signature (a set of JAR entries) and asks the client to output them.
     // 3. If APK Signature Scheme v2 (v2 signing) is enabled, the engine emits an APK Signing Block
     //    from outputZipSections() and asks its client to insert this block into the output.
+    // 4. If APK Signature Scheme v3 (v3 signing) is enabled, the engine generates a v3 signing
+    //    block in outputZipSections() as well, combining it with the v2 block (if any) into a
+    //    single APK Signing Block containing both ID-value pairs.
+
+    private static final byte[] APK_SIGNING_BLOCK_MAGIC =
+          new byte[] {
+              0x41, 0x50, 0x4b, 0x20, 0x53, 0x69, 0x67, 0x20,
+              0x42, 0x6c, 0x6f, 0x63, 0x6b, 0x20, 0x34, 0x32,
+          };
 
     private final boolean mV1SigningEnabled;
     private final boolean mV2SigningEnabled;
+    private final boolean mV3SigningEnabled;
     private final boolean mOtherSignersSignaturesPreserved;
     private final String mCreatedBy;
     private final List<V1SchemeSigner.SignerConfig> mV1SignerConfigs;
     private final DigestAlgorithm mV1ContentDigestAlgorithm;
     private final List<V2SchemeSigner.SignerConfig> mV2SignerConfigs;
+    private final List<V3SchemeSigner.SignerConfig> mV3SignerConfigs;
 
     private boolean mClosed;
 
@@ -103,6 +117,8 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
 
     private boolean mV2SignaturePending;
 
+    private boolean mV3SignaturePending;
+
     /**
      * Request to output the emitted v2 signature or {@code null} if the request hasn't been issued.
      */
@@ -113,6 +129,7 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
             int minSdkVersion,
             boolean v1SigningEnabled,
             boolean v2SigningEnabled,
+            boolean v3SigningEnabled,
             boolean otherSignersSignaturesPreserved,
             String createdBy) throws InvalidKeyException {
         if (signerConfigs.isEmpty()) {
@@ -125,8 +142,10 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
 
         mV1SigningEnabled = v1SigningEnabled;
         mV2SigningEnabled = v2SigningEnabled;
+        mV3SigningEnabled = v3SigningEnabled;
         mV1SignaturePending = v1SigningEnabled;
         mV2SignaturePending = v2SigningEnabled;
+        mV3SignaturePending = v3SigningEnabled;
         mOtherSignersSignaturesPreserved = otherSignersSignaturesPreserved;
         mCreatedBy = createdBy;
         mV1SignerConfigs =
@@ -134,6 +153,9 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
                         ? new ArrayList<>(signerConfigs.size()) : Collections.emptyList();
         mV2SignerConfigs =
                 (v2SigningEnabled)
+                        ? new ArrayList<>(signerConfigs.size()) : Collections.emptyList();
+        mV3SignerConfigs =
+                (v3SigningEnabled)
                         ? new ArrayList<>(signerConfigs.size()) : Collections.emptyList();
 
         Map<String, Integer> v1SignerNameToSignerIndex =
@@ -188,6 +210,17 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
                 v2SignerConfig.signatureAlgorithms =
                         V2SchemeSigner.getSuggestedSignatureAlgorithms(publicKey, minSdkVersion);
                 mV2SignerConfigs.add(v2SignerConfig);
+            }
+
+            if (v3SigningEnabled) {
+                V3SchemeSigner.SignerConfig v3SignerConfig = new V3SchemeSigner.SignerConfig();
+                v3SignerConfig.privateKey = signerConfig.getPrivateKey();
+                v3SignerConfig.certificates = certificates;
+                v3SignerConfig.signatureAlgorithms =
+                        V3SchemeSigner.getSuggestedSignatureAlgorithms(publicKey, minSdkVersion);
+                v3SignerConfig.minSdkVersion = minSdkVersion;
+                v3SignerConfig.maxSdkVersion = Integer.MAX_VALUE;
+                mV3SignerConfigs.add(v3SignerConfig);
             }
         }
         mV1ContentDigestAlgorithm = v1ContentDigestAlgorithm;
@@ -358,8 +391,13 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
             }
         }
 
-        List<Integer> apkSigningSchemeIds =
-                (mV2SigningEnabled) ? Collections.singletonList(2) : Collections.emptyList();
+        List<Integer> apkSigningSchemeIds = new ArrayList<>();
+        if (mV2SigningEnabled) {
+            apkSigningSchemeIds.add(2);
+        }
+        if (mV3SigningEnabled) {
+            apkSigningSchemeIds.add(3);
+        }
         byte[] inputJarManifest =
                 (mInputJarManifestEntryDataRequest != null)
                     ? mInputJarManifestEntryDataRequest.getData() : null;
@@ -455,14 +493,37 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
                             NoSuchAlgorithmException {
         checkNotClosed();
         checkV1SigningDoneIfEnabled();
-        if (!mV2SigningEnabled) {
+        if (!mV2SigningEnabled && !mV3SigningEnabled) {
             return null;
         }
         invalidateV2Signature();
 
-        byte[] apkSigningBlock =
-                V2SchemeSigner.generateApkSigningBlock(
-                        zipEntries, zipCentralDirectory, zipEocd, mV2SignerConfigs);
+        // Generate the V2 signing block (complete APK Signing Block) if enabled.
+        byte[] v2ApkSigningBlock = null;
+        if (mV2SigningEnabled) {
+            v2ApkSigningBlock =
+                    V2SchemeSigner.generateApkSigningBlock(
+                            zipEntries, zipCentralDirectory, zipEocd, mV2SignerConfigs);
+        }
+
+        // Generate the V3 signing block (complete APK Signing Block) if enabled.
+        byte[] v3ApkSigningBlock = null;
+        if (mV3SigningEnabled) {
+            v3ApkSigningBlock =
+                    V3SchemeSigner.generateApkSigningBlock(
+                            zipEntries, zipCentralDirectory, zipEocd, mV3SignerConfigs);
+        }
+
+        // Combine the V2 and V3 blocks into a single APK Signing Block containing both
+        // ID-value pairs. If only one is enabled, use it directly.
+        byte[] apkSigningBlock;
+        if ((v2ApkSigningBlock != null) && (v3ApkSigningBlock != null)) {
+            apkSigningBlock = combineApkSigningBlocks(v2ApkSigningBlock, v3ApkSigningBlock);
+        } else if (v2ApkSigningBlock != null) {
+            apkSigningBlock = v2ApkSigningBlock;
+        } else {
+            apkSigningBlock = v3ApkSigningBlock;
+        }
 
         mAddV2SignatureRequest = new OutputApkSigningBlockRequestImpl(apkSigningBlock);
         return mAddV2SignatureRequest;
@@ -473,6 +534,7 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
         checkNotClosed();
         checkV1SigningDoneIfEnabled();
         checkV2SigningDoneIfEnabled();
+        checkV3SigningDoneIfEnabled();
     }
 
     @Override
@@ -499,6 +561,14 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
     private void invalidateV2Signature() {
         if (mV2SigningEnabled) {
             mV2SignaturePending = true;
+            mAddV2SignatureRequest = null;
+        }
+        invalidateV3Signature();
+    }
+
+    private void invalidateV3Signature() {
+        if (mV3SigningEnabled) {
+            mV3SignaturePending = true;
             mAddV2SignatureRequest = null;
         }
     }
@@ -560,8 +630,63 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
                     "v2 signature (APK Signature Scheme v2 signature) addition requested by"
                             + " outputZipSections() hasn't been fulfilled yet");
         }
-        mAddV2SignatureRequest = null;
+        // NOTE: mAddV2SignatureRequest is intentionally not cleared here because it is shared
+        // with the v3 check. checkV3SigningDoneIfEnabled() (or invalidateV2Signature on the next
+        // signing round) will clear it.
         mV2SignaturePending = false;
+    }
+
+    private void checkV3SigningDoneIfEnabled() {
+        if (!mV3SignaturePending) {
+            return;
+        }
+        if (mAddV2SignatureRequest == null) {
+            throw new IllegalStateException(
+                    "v3 signature (APK Signature Scheme v3 signature) not yet generated."
+                            + " Skipped outputZipSections()?");
+        }
+        if (!mAddV2SignatureRequest.isDone()) {
+            throw new IllegalStateException(
+                    "v3 signature (APK Signature Scheme v3 signature) addition requested by"
+                            + " outputZipSections() hasn't been fulfilled yet");
+        }
+        mV3SignaturePending = false;
+    }
+
+    /**
+     * Combines two complete APK Signing Blocks (each containing a single ID-value pair) into a
+     * single APK Signing Block containing both ID-value pairs.
+     *
+     * <p>A complete APK Signing Block has the following structure:
+     * <ul>
+     *   <li>uint64: size (excluding this field) -- 8 bytes</li>
+     *   <li>repeated ID-value pairs -- variable</li>
+     *   <li>uint64: size (same as above) -- 8 bytes</li>
+     *   <li>uint128: magic -- 16 bytes</li>
+     * </ul>
+     * The ID-value pairs are located between offset 8 and (length - 24).
+     */
+    private static byte[] combineApkSigningBlocks(byte[] block1, byte[] block2) {
+        // Each block has 8 bytes of header (size) and 24 bytes of trailer (size + magic).
+        // The ID-value pairs are in between.
+        int pairs1Start = 8;
+        int pairs1Length = block1.length - 32; // 8 (header) + 24 (trailer) = 32
+        int pairs2Start = 8;
+        int pairs2Length = block2.length - 32;
+
+        int totalPairsLength = pairs1Length + pairs2Length;
+        int resultSize = 8 + totalPairsLength + 8 + 16;
+        ByteBuffer result = ByteBuffer.allocate(resultSize);
+        result.order(ByteOrder.LITTLE_ENDIAN);
+
+        long blockSizeFieldValue = resultSize - 8;
+        result.putLong(blockSizeFieldValue);
+        result.put(block1, pairs1Start, pairs1Length);
+        result.put(block2, pairs2Start, pairs2Length);
+        result.putLong(blockSizeFieldValue);
+        result.put(APK_SIGNING_BLOCK_MAGIC);
+
+        return result.array();
     }
 
     /**
@@ -870,6 +995,7 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
 
         private boolean mV1SigningEnabled = true;
         private boolean mV2SigningEnabled = true;
+        private boolean mV3SigningEnabled = true;
         private boolean mOtherSignersSignaturesPreserved;
         private String mCreatedBy = "1.0 (Android)";
 
@@ -903,6 +1029,7 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
                     mMinSdkVersion,
                     mV1SigningEnabled,
                     mV2SigningEnabled,
+                    mV3SigningEnabled,
                     mOtherSignersSignaturesPreserved,
                     mCreatedBy);
         }
@@ -925,6 +1052,17 @@ public class DefaultApkSignerEngine implements ApkSignerEngine {
          */
         public Builder setV2SigningEnabled(boolean enabled) {
             mV2SigningEnabled = enabled;
+            return this;
+        }
+
+        /**
+         * Sets whether the APK should be signed using APK Signature Scheme v3 (aka v3 signature
+         * scheme).
+         *
+         * <p>By default, the APK will be signed using this scheme.
+         */
+        public Builder setV3SigningEnabled(boolean enabled) {
+            mV3SigningEnabled = enabled;
             return this;
         }
 

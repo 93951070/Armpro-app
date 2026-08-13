@@ -13,17 +13,17 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class StreamUtils {
+    private static final int BUFFER_SIZE = 8192;
+
     @NotNull
     public static byte[] toByte(@NotNull InputStream inputStream) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] bs = new byte[1024 * 1024 * 20];
-        int len = 0;
-        while((len = inputStream.read(bs)) != -1){
-            os.write(bs,0,len);
-            os.flush();
+        ByteArrayOutputStream os = new ByteArrayOutputStream(BUFFER_SIZE * 4);
+        byte[] bs = new byte[BUFFER_SIZE];
+        int len;
+        while ((len = inputStream.read(bs)) != -1) {
+            os.write(bs, 0, len);
         }
         inputStream.close();
-        os.close();
         return os.toByteArray();
     }
 
@@ -33,14 +33,12 @@ public class StreamUtils {
 
     @NotNull
     public static byte[] ReadZipEntry(@NotNull InputStream inputStream) throws IOException {
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] bs = new byte[1024 * 1024 * 20];
-        int len = 0;
-        while((len = inputStream.read(bs)) != -1){
-            os.write(bs,0,len);
-            os.flush();
+        ByteArrayOutputStream os = new ByteArrayOutputStream(BUFFER_SIZE * 4);
+        byte[] bs = new byte[BUFFER_SIZE];
+        int len;
+        while ((len = inputStream.read(bs)) != -1) {
+            os.write(bs, 0, len);
         }
-        os.close();
         return os.toByteArray();
     }
 }

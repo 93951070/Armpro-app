@@ -4,6 +4,7 @@
 
 package armadillo.studio.common.rsa;
 
+import android.util.Base64;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,28 +17,63 @@ import java.security.spec.X509EncodedKeySpec;
 
 import javax.crypto.Cipher;
 
+import armadillo.studio.common.config.AppConfig;
+
 public final class RSAUtils {
 
-    /**
-     * RSA最大加密明文大小
-     */
     private static final int MAX_ENCRYPT_BLOCK = 117;
-
-    /**
-     * RSA最大解密密文大小
-     */
     private static final int MAX_DECRYPT_BLOCK = 128;
 
+    private static volatile PrivateKey cachedPrivateKey;
+    private static volatile PublicKey cachedPublicKey;
+    private static volatile KeyFactory cachedKeyFactory;
+
+    private static KeyFactory getKeyFactory() throws Exception {
+        if (cachedKeyFactory == null) {
+            synchronized (RSAUtils.class) {
+                if (cachedKeyFactory == null) {
+                    cachedKeyFactory = KeyFactory.getInstance("RSA");
+                }
+            }
+        }
+        return cachedKeyFactory;
+    }
+
     public static PublicKey getPublicKey(byte[] keyBytes) throws Exception {
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePublic(keySpec);
+        return getKeyFactory().generatePublic(new X509EncodedKeySpec(keyBytes));
     }
 
     public static PrivateKey getPrivateKey(byte[] keyBytes) throws Exception {
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePrivate(keySpec);
+        return getKeyFactory().generatePrivate(new PKCS8EncodedKeySpec(keyBytes));
+    }
+
+    private static PrivateKey getCachedPrivateKey() throws Exception {
+        if (cachedPrivateKey == null) {
+            synchronized (RSAUtils.class) {
+                if (cachedPrivateKey == null) {
+                    byte[] keyBytes = Base64.decode(AppConfig.RSA_PRIVATE_KEY, Base64.NO_WRAP);
+                    cachedPrivateKey = getKeyFactory().generatePrivate(new PKCS8EncodedKeySpec(keyBytes));
+                }
+            }
+        }
+        return cachedPrivateKey;
+    }
+
+    private static PublicKey getCachedPublicKey() throws Exception {
+        if (cachedPublicKey == null) {
+            synchronized (RSAUtils.class) {
+                if (cachedPublicKey == null) {
+                    byte[] keyBytes = Base64.decode(AppConfig.RSA_PUBLIC_KEY.getBytes(), Base64.NO_WRAP);
+                    cachedPublicKey = getKeyFactory().generatePublic(new X509EncodedKeySpec(keyBytes));
+                }
+            }
+        }
+        return cachedPublicKey;
+    }
+
+    @NotNull
+    public static byte[] decrypt(@NotNull byte[] encryptedData) throws Exception {
+        return decrypt(encryptedData, getCachedPublicKey());
     }
 
     @NotNull
@@ -45,11 +81,10 @@ public final class RSAUtils {
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.DECRYPT_MODE, publicKey);
         int inputLen = encryptedData.length;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream(inputLen);
         int offSet = 0;
         byte[] cache;
         int i = 0;
-        // 对数据分段解密
         while (inputLen - offSet > 0) {
             if (inputLen - offSet > MAX_DECRYPT_BLOCK) {
                 cache = cipher.doFinal(encryptedData, offSet, MAX_DECRYPT_BLOCK);
@@ -66,15 +101,19 @@ public final class RSAUtils {
     }
 
     @NotNull
+    public static byte[] encrypt(@NotNull byte[] data) throws Exception {
+        return encrypt(data, getCachedPrivateKey());
+    }
+
+    @NotNull
     public static byte[] encrypt(@NotNull byte[] data, PrivateKey privateKey) throws Exception {
         Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
         cipher.init(Cipher.ENCRYPT_MODE, privateKey);
         int inputLen = data.length;
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ByteArrayOutputStream out = new ByteArrayOutputStream(inputLen);
         int offSet = 0;
         byte[] cache;
         int i = 0;
-        // 对数据分段加密
         while (inputLen - offSet > 0) {
             if (inputLen - offSet > MAX_ENCRYPT_BLOCK) {
                 cache = cipher.doFinal(data, offSet, MAX_ENCRYPT_BLOCK);
@@ -90,4 +129,3 @@ public final class RSAUtils {
         return encryptedData;
     }
 }
-
