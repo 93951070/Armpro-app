@@ -16,8 +16,11 @@ import com.google.common.collect.ImmutableList;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.FileChannel;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -38,8 +41,22 @@ public class SignerApk {
     @NotNull
     @SuppressLint("SimpleDateFormat")
     public static File SignApk(@NotNull File Input, InputStream stream, @NotNull String Pass, @NotNull String AliasPass, boolean deleteInput, int signer_type) throws ApkFormatException, SignatureException, NoSuchAlgorithmException, InvalidKeyException, IOException, KeyStoreException, UnrecoverableKeyException, CertificateException {
+        // If the input APK is not readable (e.g. installed app under /data/app/),
+        // copy it to the app's cache directory first to avoid EACCES errors.
+        File apkToSign = Input;
+        boolean copiedToCache = false;
+        if (!Input.canRead()) {
+            File cacheDir = CloudApp.getContext().getCacheDir();
+            File tempApk = new File(cacheDir, "temp_sign_" + System.currentTimeMillis() + ".apk");
+            try (FileChannel src = new FileInputStream(Input).getChannel();
+                 FileChannel dst = new FileOutputStream(tempApk).getChannel()) {
+                dst.transferFrom(src, 0, src.size());
+            }
+            apkToSign = tempApk;
+            copiedToCache = true;
+        }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("_HH_mm_ss");
-        File out = new File(Input.getAbsolutePath().replace(".apk", simpleDateFormat.format(System.currentTimeMillis()) + "_Sign.apk"));
+        File out = new File(apkToSign.getAbsolutePath().replace(".apk", simpleDateFormat.format(System.currentTimeMillis()) + "_Sign.apk"));
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         keyStore.load(stream, Pass.toCharArray());
         String alias = keyStore.aliases().nextElement();
@@ -51,7 +68,7 @@ public class SignerApk {
                         .build();
         ApkSigner.Builder builder = new ApkSigner.Builder(ImmutableList.of(signerConfig))
                 .setCreatedBy(CloudApp.getContext().getString(R.string.app_name))
-                .setInputApk(Input)
+                .setInputApk(apkToSign)
                 .setOutputApk(out)
                 .setMinSdkVersion(19)
                 .setV1SigningEnabled(false)
@@ -73,6 +90,9 @@ public class SignerApk {
         ApkSigner.sign();
         if (deleteInput)
             Input.delete();
+        // Clean up the temporary cached copy if we made one
+        if (copiedToCache)
+            apkToSign.delete();
         return out;
     }
 

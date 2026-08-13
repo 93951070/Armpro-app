@@ -14,15 +14,17 @@
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardCornerRadius="10dp"
+        app:cardBackgroundColor="@color/card_bg"
+        app:cardCornerRadius="12dp"
         app:cardElevation="3dp"
         app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        app:contentPadding="12dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/spacing_small"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -38,9 +40,8 @@
                     android:singleLine="true"
                     android:text="@string/single_item_mac"
                     android:textAppearance="?attr/textAppearanceListItem"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/mac"
@@ -68,9 +69,8 @@
                     android:singleLine="true"
                     android:text="@string/single_item_trial_count"
                     android:textAppearance="?attr/textAppearanceListItem"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/count"
@@ -98,9 +98,8 @@
                     android:singleLine="true"
                     android:text="@string/single_item_trial_lasttime"
                     android:textAppearance="?attr/textAppearanceListItem"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
+                    android:textColor="@color/text_secondary"
+                    android:textSize="12sp" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/time"
@@ -110,9 +109,8 @@
                     android:gravity="start|center"
                     android:singleLine="true"
                     android:textAppearance="?attr/textAppearanceListItem"
-                    android:textColor="@color/colorAccent"
+                    android:textColor="@color/text_hint"
                     android:textSize="12sp"
-                    android:textStyle="bold"
                     tools:text="2022" />
             </LinearLayout>
 

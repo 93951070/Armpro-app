@@ -1,61 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- ===== Primary brand colors (modern deep blue / indigo) ===== -->
-    <color name="colorPrimary">#1A237E</color>
-    <color name="colorPrimaryDark">#000051</color>
-    <color name="colorPrimaryVariant">#283593</color>
-    <color name="colorAccent">#FF6F00</color>
+    <!-- ===== 纸片ui 主色调：柔和靛蓝 + 珊瑚粉强调 ===== -->
+    <color name="colorPrimary">#5B6EF5</color>
+    <color name="colorPrimaryDark">#4A5BD4</color>
+    <color name="colorPrimaryVariant">#7B8AF5</color>
+    <color name="colorAccent">#FF6B6B</color>
 
     <!-- Primary tonal variants -->
-    <color name="primary_light">#5C6BC0</color>
-    <color name="primary_dark">#000051</color>
+    <color name="primary_light">#8B9BF7</color>
+    <color name="primary_dark">#3D4FB8</color>
 
-    <!-- Accent / amber -->
-    <color name="accent">#FF6F00</color>
+    <!-- Accent / coral -->
+    <color name="accent">#FF6B6B</color>
 
-    <!-- ===== Surfaces & backgrounds ===== -->
+    <!-- ===== 表面与背景 ===== -->
     <color name="surface">#FFFFFF</color>
-    <color name="on_surface">#1C1B1F</color>
-    <color name="background">#F5F5F5</color>
+    <color name="on_surface">#2C2C2C</color>
+    <color name="background">#F5F7FA</color>
 
-    <!-- ===== Semantic colors ===== -->
-    <color name="error">#B00020</color>
-    <color name="success">#00C853</color>
+    <!-- ===== 语义颜色 ===== -->
+    <color name="error">#FF5252</color>
+    <color name="success">#4CAF50</color>
 
-    <!-- ===== Card ===== -->
+    <!-- ===== 卡片 ===== -->
     <color name="card_bg">#FFFFFF</color>
     <color name="card_shadow">#1F000000</color>
 
-    <!-- ===== Text ===== -->
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="text_hint">#BDBDBD</color>
+    <!-- ===== 文字 ===== -->
+    <color name="text_primary">#2C2C2C</color>
+    <color name="text_secondary">#999999</color>
+    <color name="text_hint">#CCCCCC</color>
 
-    <!-- ===== Divider ===== -->
-    <color name="divider">#E0E0E0</color>
+    <!-- ===== 分割线 ===== -->
+    <color name="divider">#EFF0F3</color>
 
-    <!-- ===== Navigation ===== -->
-    <color name="nav_item_active">#1A237E</color>
-    <color name="nav_item_inactive">#9E9E9E</color>
+    <!-- ===== 导航 ===== -->
+    <color name="nav_item_active">#5B6EF5</color>
+    <color name="nav_item_inactive">#AAAAAA</color>
 
-    <!-- ===== Gradients ===== -->
-    <color name="gradient_start">#1A237E</color>
-    <color name="gradient_end">#3949AB</color>
+    <!-- ===== 渐变（蓝→紫柔和色） ===== -->
+    <color name="gradient_start">#5B6EF5</color>
+    <color name="gradient_end">#8B7FF5</color>
+
+    <!-- ===== 粉色渐变（强调按钮） ===== -->
+    <color name="gradient_pink_start">#FF6B6B</color>
+    <color name="gradient_pink_end">#FF8E8E</color>
 
     <!-- ===== Legacy / existing palette (kept for compatibility) ===== -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="divider_color">#DBDBDB</color>
-    <color name="blue">#323453</color>
-    <color name="grey_5">#f2f2f2</color>
-    <color name="grey_80">#37474f</color>
-    <color name="grey_60">#666666</color>
-    <color name="grey_40">#999999</color>
-    <color name="grey_90">#263238</color>
+    <color name="divider_color">#EFF0F3</color>
+    <color name="blue">#5B6EF5</color>
+    <color name="grey_5">#F5F7FA</color>
+    <color name="grey_80">#2C2C2C</color>
+    <color name="grey_60">#999999</color>
+    <color name="grey_40">#AAAAAA</color>
+    <color name="grey_90">#2C2C2C</color>
     <color name="cyan_300">#4DD0E1</color>
-    <color name="red_300">#E57373</color>
-    <color name="red">@android:color/holo_red_light</color>
-    <color name="helper">#23B9FD</color>
+    <color name="red_300">#FF6B6B</color>
+    <color name="red">#FF5252</color>
+    <color name="helper">#5B6EF5</color>
 
 </resources>

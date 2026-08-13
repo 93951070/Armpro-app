@@ -11,16 +11,20 @@
         android:id="@+id/cardview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="10dp"
-        app:cardElevation="1dp"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:cardBackgroundColor="@color/card_bg"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="3dp"
         app:cardPreventCornerOverlap="true"
-        app:cardUseCompatPadding="true">
+        app:cardUseCompatPadding="true"
+        app:contentPadding="12dp">
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="5dp"
+            android:layout_margin="@dimen/spacing_small"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -28,13 +32,13 @@
                 android:id="@+id/avatar"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
-                android:layout_marginEnd="2dp"
+                android:layout_marginEnd="@dimen/spacing_small"
                 tools:src="@mipmap/ic_launcher" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/dp_4"
+                android:layout_marginStart="@dimen/spacing_medium"
                 android:layout_weight="2"
                 android:orientation="vertical">
 
@@ -48,10 +52,10 @@
                     android:gravity="start|center"
                     android:singleLine="true"
                     android:textAppearance="?attr/textAppearanceListItem"
-                    android:textColor="@color/colorAccent"
-                    android:textSize="12dp"
+                    android:textColor="@color/text_primary"
+                    android:textSize="12sp"
                     android:textStyle="bold"
-                    tools:ignore="NestedWeights,SpUsage"
+                    tools:ignore="NestedWeights"
                     tools:text="标题 · 100" />
 
                 <!--包名-->
@@ -63,6 +67,7 @@
                     android:layout_weight="1"
                     android:gravity="start|center"
                     android:singleLine="true"
+                    android:textColor="@color/text_secondary"
                     android:textSize="9sp"
                     tools:ignore="SmallSp,TextSize"
                     tools:text="包名:com.Ks" />
@@ -77,6 +82,7 @@
                     android:layout_weight="1"
                     android:gravity="start|center"
                     android:singleLine="true"
+                    android:textColor="@color/text_secondary"
                     android:textSize="9sp"
                     tools:ignore="SmallSp,TextSize"
                     tools:text="模式:单码验证" />
@@ -99,6 +105,7 @@
                     android:gravity="end|center"
                     android:singleLine="true"
                     android:textColor="@color/colorAccent"
+                    android:textSize="14sp"
                     android:textStyle="bold"
                     tools:text="0" />
 
@@ -109,12 +116,14 @@
                     android:gravity="end|center"
                     android:singleLine="true"
                     android:text="@string/usr_count"
+                    android:textColor="@color/text_secondary"
                     android:textSize="9sp"
                     tools:ignore="SmallSp" />
 
             </LinearLayout>
 
         </LinearLayout>
+
 
     </androidx.cardview.widget.CardView>
 

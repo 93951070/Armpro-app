@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -17,7 +18,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleTextColor="@color/white"
             tools:title="测试应用" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -31,13 +34,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/debug"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/dp_4"
-                android:textColor="@color/black"
-                android:textSize="12sp" />
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                app:cardBackgroundColor="@color/card_bg"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="3dp"
+                app:cardPreventCornerOverlap="true"
+                app:cardUseCompatPadding="true">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/debug"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="12dp"
+                    android:fontFamily="monospace"
+                    android:textColor="@color/text_primary"
+                    android:textSize="12sp" />
+
+            </androidx.cardview.widget.CardView>
+
         </androidx.core.widget.NestedScrollView>
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -49,12 +66,14 @@
             android:layout_margin="@dimen/fab_margin"
             android:scaleType="fitXY"
             android:src="@drawable/ic_content_copy"
+            app:backgroundTint="@color/colorPrimary"
             app:borderWidth="0dp"
-            app:elevation="5dp"
+            app:elevation="8dp"
             app:fabCustomSize="50dp"
             app:maxImageSize="24dp"
             app:pressedTranslationZ="12dp"
-            app:rippleColor="#cccccc" />
+            app:rippleColor="@color/divider"
+            app:tint="@color/white" />
 
     </RelativeLayout>
 

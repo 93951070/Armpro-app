@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -17,7 +18,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleTextColor="@color/white"
             tools:title="测试应用" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -45,8 +48,9 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="7dp"
-                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="3dp"
                     app:cardPreventCornerOverlap="true"
                     app:cardUseCompatPadding="true">
 
@@ -63,6 +67,7 @@
                             android:text="@string/soft_basic_config" />
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -73,10 +78,11 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_update_title"
                                 android:inputType="text"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -87,11 +93,12 @@
                                 android:layout_height="100dp"
                                 android:gravity="start"
                                 android:hint="@string/soft_update_msg"
-                                android:textColorHint="@color/colorPrimary"
+                                android:textColorHint="@color/text_hint"
                                 android:textSize="13sp" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -102,10 +109,11 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_single_page_url"
                                 android:inputType="textUri"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -116,10 +124,11 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_update_ver"
                                 android:inputType="number"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -130,7 +139,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_update_url"
                                 android:inputType="textUri"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <androidx.appcompat.widget.AppCompatTextView
@@ -170,8 +179,9 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="7dp"
-                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="3dp"
                     app:cardPreventCornerOverlap="true"
                     app:cardUseCompatPadding="true">
 
@@ -186,9 +196,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="@string/soft_text_color_config"
-                            android:textColor="@color/black" />
+                            android:textColor="@color/text_primary" />
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -199,10 +210,11 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_title_color"
                                 android:text="@string/default_color"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -213,10 +225,11 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_msg_color"
                                 android:text="@string/default_color"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -227,10 +240,11 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_confirm_color"
                                 android:text="@string/default_color"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -241,10 +255,11 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_extra_color"
                                 android:text="@string/default_color"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -255,7 +270,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_cancel_color"
                                 android:text="@string/default_color"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
@@ -267,8 +282,9 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="7dp"
-                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="3dp"
                     app:cardPreventCornerOverlap="true"
                     app:cardUseCompatPadding="true">
 
@@ -285,6 +301,7 @@
                             android:text="@string/soft_confirm_config" />
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -295,7 +312,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_confirm_text"
                                 android:inputType="text"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <androidx.appcompat.widget.AppCompatSpinner
@@ -314,8 +331,9 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="7dp"
-                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="3dp"
                     app:cardPreventCornerOverlap="true"
                     app:cardUseCompatPadding="true">
 
@@ -332,6 +350,7 @@
                             android:text="@string/soft_cancel_config" />
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -342,7 +361,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_cancel_text"
                                 android:inputType="text"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 
@@ -354,8 +373,9 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="7dp"
-                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="3dp"
                     app:cardPreventCornerOverlap="true"
                     app:cardUseCompatPadding="true">
 
@@ -372,6 +392,7 @@
                             android:text="@string/soft_extra_config" />
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -382,7 +403,7 @@
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_extra_text"
                                 android:inputType="text"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
 
                         <androidx.appcompat.widget.AppCompatSpinner
@@ -393,6 +414,7 @@
                             android:entries="@array/update_action" />
 
                         <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Widget.App.TextInputLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp">
@@ -402,7 +424,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:hint="@string/soft_action_body"
-                                android:textColorHint="@color/colorPrimary" />
+                                android:textColorHint="@color/text_hint" />
                         </com.google.android.material.textfield.TextInputLayout>
                     </LinearLayout>
 

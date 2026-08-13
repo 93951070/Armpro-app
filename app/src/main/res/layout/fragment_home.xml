@@ -31,7 +31,7 @@
         android:layout_margin="@dimen/fab_margin"
         android:src="@drawable/ic_add"
         android:transitionName="add"
-        app:backgroundTint="@color/colorAccent"
+        app:backgroundTint="@color/colorPrimary"
         app:elevation="8dp"
         app:fabSize="normal"
         app:pressedTranslationZ="12dp"

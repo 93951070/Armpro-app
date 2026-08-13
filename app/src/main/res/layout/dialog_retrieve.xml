@@ -1,37 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:padding="16dp">
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:hint="@string/dialog_user_text">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/retrieve_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            android:hint="@string/dialog_user_text"
             android:inputType="text"
             android:maxLength="20"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:hint="@string/dialog_email_text">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/retrieve_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/dialog_email_text"
             android:inputType="textEmailAddress"
-            android:textColor="@android:color/black" />
+            android:textColor="@color/text_primary"
+            android:textColorHint="@color/text_hint" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
@@ -39,8 +44,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:background="@drawable/shape_button_dow"
+        android:background="@drawable/shape_button_primary"
+        android:minHeight="48dp"
         android:text="@string/dialog_Retrieve_text"
-        android:textColor="@android:color/black" />
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
 
 </LinearLayout>

@@ -10,46 +10,56 @@
     android:layout_height="wrap_content"
     android:clickable="true"
     android:focusable="true"
-    android:padding="@dimen/dp_5"
     android:foreground="?android:attr/selectableItemBackground"
     tools:ignore="UnusedAttribute">
 
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/dp_2"
-        android:orientation="horizontal"
-        tools:ignore="UselessParent">
+        app:cardBackgroundColor="@color/card_bg"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="3dp"
+        app:cardPreventCornerOverlap="true"
+        app:cardUseCompatPadding="true"
+        app:contentPadding="12dp">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/iv_key"
-            android:layout_width="18dp"
-            android:layout_height="match_parent"
-            app:srcCompat="@drawable/ic_keyboard_arrow_right_black_18dp"
-            tools:ignore="PrivateResource" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            tools:ignore="UselessParent">
 
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/icon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            tools:srcCompat="@drawable/ic_class_dir" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/iv_key"
+                android:layout_width="18dp"
+                android:layout_height="match_parent"
+                app:srcCompat="@drawable/ic_keyboard_arrow_right_black_18dp"
+                tools:ignore="PrivateResource" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/name"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/dp_2"
-            android:layout_weight="1"
-            android:gravity="start|center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@color/colorAccent"
-            android:singleLine="true"
-            tools:text="@string/dialog_desc" />
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                tools:srcCompat="@drawable/ic_class_dir" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/name"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_weight="1"
+                android:gravity="start|center_vertical"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="@color/text_primary"
+                android:singleLine="true"
+                tools:text="@string/dialog_desc" />
 
 
-        <com.google.android.material.checkbox.MaterialCheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" />
-    </LinearLayout>
+            <com.google.android.material.checkbox.MaterialCheckBox
+                android:id="@+id/checkBox"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

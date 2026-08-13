@@ -1,10 +1,8 @@
 <resources>
 
     <!--
-        Base application theme.
-        Migrated to Material Components (NoActionBar bridge) so the app can use
-        Material widgets while keeping the custom Toolbar approach intact.
-        AppTheme.NoActionBar inherits from this via dot-notation.
+        纸片ui 主题 — 卡片式扁平化工具类风格
+        基于 Material Components，圆角卡片容器 + 柔和渐变
     -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -21,7 +19,7 @@
         <item name="colorError">@color/error</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/white</item>
         <item name="android:fontFamily">@font/medium</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
@@ -37,7 +35,7 @@
         <item name="android:colorBackground">@color/background</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
 
@@ -46,7 +44,7 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@color/colorPrimary</item>
+        <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowContentTransitions">true</item>
     </style>
 
@@ -54,17 +52,19 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <!-- ===== Reusable modern Material styles ===== -->
+    <!-- ===== 纸片ui 可复用样式 ===== -->
 
-    <!-- Modern card style: rounded corners (12dp), soft elevation, white surface -->
+    <!-- 卡片样式：12dp圆角，柔和阴影，白色背景 -->
     <style name="Widget.App.CardView" parent="Widget.MaterialComponents.CardView">
         <item name="cardBackgroundColor">@color/card_bg</item>
         <item name="cardCornerRadius">12dp</item>
-        <item name="cardElevation">4dp</item>
+        <item name="cardElevation">3dp</item>
         <item name="contentPadding">12dp</item>
+        <item name="cardPreventCornerOverlap">true</item>
+        <item name="cardUseCompatPadding">true</item>
     </style>
 
-    <!-- Modern filled button: primary tint, rounded corners, ripple -->
+    <!-- 主按钮：渐变蓝紫背景，12dp圆角，白色文字 -->
     <style name="Widget.App.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/white</item>
         <item name="backgroundTint">@color/colorPrimary</item>
@@ -72,9 +72,29 @@
         <item name="android:minHeight">48dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:elevation">4dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- Modern text styles -->
+    <!-- 描边按钮：透明背景，主色描边，12dp圆角 -->
+    <style name="Widget.App.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="strokeColor">@color/colorPrimary</item>
+        <item name="strokeWidth">1.5dp</item>
+        <item name="android:minHeight">48dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <!-- 文字按钮：无描边，主色文字 -->
+    <style name="Widget.App.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <!-- 文字样式 -->
     <style name="TextAppearance.App.Headline" parent="TextAppearance.MaterialComponents.Headline6">
         <item name="android:textColor">@color/text_primary</item>
         <item name="android:textStyle">bold</item>
@@ -88,6 +108,16 @@
         <item name="android:textColor">@color/text_hint</item>
     </style>
 
+    <!-- 输入框样式：OutlinedBox + 12dp圆角 -->
+    <style name="Widget.App.TextInputLayout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxCornerRadiusBottomEnd">12dp</item>
+        <item name="boxCornerRadiusBottomStart">12dp</item>
+        <item name="boxCornerRadiusTopEnd">12dp</item>
+        <item name="boxCornerRadiusTopStart">12dp</item>
+        <item name="boxStrokeColor">@color/colorPrimary</item>
+        <item name="hintTextColor">@color/colorPrimary</item>
+    </style>
+
     <style name="MaterialSearchViewStyle">
         <item name="searchBackground">@color/colorPrimary</item>
         <item name="searchBackIcon">@drawable/ic_arrow_back_black_24dp</item>
@@ -97,7 +127,7 @@
 
     <style name="cornerdialog" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:windowIsFloating">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowBackground">@drawable/shape_card_dialog</item>
     </style>
 
     <style name="dialogWindowAnim" mce_bogus="1" parent="android:Animation">

@@ -8,22 +8,16 @@
     android:padding="@dimen/spacing_mlarge">
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp"
-        app:boxStrokeColor="@color/colorPrimary"
-        app:hintTextColor="@color/colorPrimary">
+        android:hint="@string/dialog_user_text">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/login_username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            android:hint="@string/dialog_user_text"
             android:inputType="text"
             android:maxLength="20"
             android:textColor="@color/text_primary"
@@ -31,16 +25,11 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        style="@style/Widget.App.TextInputLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_middle"
-        app:boxCornerRadiusBottomEnd="12dp"
-        app:boxCornerRadiusBottomStart="12dp"
-        app:boxCornerRadiusTopEnd="12dp"
-        app:boxCornerRadiusTopStart="12dp"
-        app:boxStrokeColor="@color/colorPrimary"
-        app:hintTextColor="@color/colorPrimary"
+        android:hint="@string/dialog_pass_text"
         app:passwordToggleEnabled="true"
         app:passwordToggleTint="@color/colorPrimary">
 
@@ -49,7 +38,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:digits="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-            android:hint="@string/dialog_pass_text"
             android:inputType="textPassword"
             android:maxLength="40"
             android:textColor="@color/text_primary"
@@ -64,6 +52,7 @@
         android:background="@drawable/shape_button_primary"
         android:minHeight="48dp"
         android:text="@string/dialog_login_text"
+        android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold" />

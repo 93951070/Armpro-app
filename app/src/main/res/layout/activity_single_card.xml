@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -23,7 +24,9 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:titleTextColor="@color/white"
                 tools:title="测试应用" />
 
             <com.miguelcatalan.materialsearchview.MaterialSearchView
@@ -52,6 +55,8 @@
                 android:id="@+id/recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/fab_margin"
                 android:scrollbars="vertical" />
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -75,9 +80,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="8dp"
+            app:backgroundTint="@color/colorAccent"
             app:layout_anchor="@+id/bottom_app_bar"
             app:layout_anchorGravity="center_horizontal"
-            app:srcCompat="@drawable/ic_add" />
+            app:srcCompat="@drawable/ic_add"
+            app:tint="@color/white" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

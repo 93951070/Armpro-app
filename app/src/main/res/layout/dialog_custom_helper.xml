@@ -4,49 +4,49 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/dp_15">
+    android:padding="16dp">
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextAppearance.AppCompat.Title"
+        style="@style/TextAppearance.App.Headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dialog_tips" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextAppearance.AppCompat.Body1"
+        style="@style/TextAppearance.App.Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_5"
         android:text="@string/dialog_custom_invoke_helper1" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextAppearance.AppCompat.Body1"
+        style="@style/TextAppearance.App.Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_5"
         android:text="@string/dialog_custom_invoke_helper2" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextAppearance.AppCompat.Small"
+        style="@style/TextAppearance.App.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dialog_custom_invoke_helper3" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextAppearance.AppCompat.Body1"
+        style="@style/TextAppearance.App.Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_5"
         android:text="@string/dialog_custom_invoke_helper4" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextAppearance.AppCompat.Small"
+        style="@style/TextAppearance.App.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dialog_custom_invoke_helper5" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextAppearance.AppCompat.Body1"
+        style="@style/TextAppearance.App.Body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp_5"
@@ -55,7 +55,7 @@
 
 
     <androidx.appcompat.widget.AppCompatTextView
-        style="@style/TextAppearance.AppCompat.Small"
+        style="@style/TextAppearance.App.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/dialog_custom_invoke_helper6" />

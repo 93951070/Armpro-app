@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -17,7 +18,9 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:titleTextColor="@color/white"
             tools:title="测试应用" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -45,8 +48,9 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?android:attr/selectableItemBackground"
-                    app:cardCornerRadius="7dp"
-                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="3dp"
                     app:cardPreventCornerOverlap="true"
                     app:cardUseCompatPadding="true">
 
@@ -73,7 +77,7 @@
                             android:gravity="start"
                             android:hint="@string/admob_banner_tips"
                             android:padding="@dimen/dp_5"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/text_primary"
                             android:textSize="13sp"
                             tools:ignore="HardcodedText,RtlSymmetry" />
 
@@ -94,7 +98,7 @@
                             android:gravity="start"
                             android:hint="@string/admob_interstitial_tips"
                             android:padding="@dimen/dp_5"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/text_primary"
                             android:textSize="13sp"
                             tools:ignore="HardcodedText,RtlSymmetry" />
 
@@ -116,7 +120,7 @@
                             android:gravity="start"
                             android:hint="@string/admob_rewarded_tips"
                             android:padding="@dimen/dp_5"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/text_primary"
                             android:textSize="13sp"
                             tools:ignore="HardcodedText,RtlSymmetry" />
 
@@ -138,7 +142,7 @@
                             android:hint="@string/admob_rules_tips"
                             android:padding="@dimen/dp_5"
                             android:text="\\S+"
-                            android:textColor="@color/colorPrimary"
+                            android:textColor="@color/text_primary"
                             android:textSize="13sp"
                             tools:ignore="HardcodedText,RtlSymmetry" />
                     </LinearLayout>
