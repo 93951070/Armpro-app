@@ -16,8 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageButton;
 import androidx.appcompat.widget.SwitchCompat;
 
-import com.lihang.chart.ChartLineItem;
-import com.lihang.chart.ChartLineView;
+import com.lihang.chart.utils.ChartLineItem;
+import com.lihang.chart.view.ChartLineView;
 
 import org.jetbrains.annotations.NotNull;
 

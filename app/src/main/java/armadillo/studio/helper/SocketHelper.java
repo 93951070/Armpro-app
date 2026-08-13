@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.ByteArrayInputStream;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -28,6 +29,10 @@ import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyFactory;
+import java.security.PrivateKey;
+import java.security.Signature;
+import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -152,23 +157,41 @@ public class SocketHelper {
                         Error(socket, socketCallBack, new ConnectException(CloudApp.getContext().getString(R.string.connection_fail)));
                 } else {
                     try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-                         DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());) {
-                        dataOutputStream.writeBytes(magic);
-                        dataOutputStream.writeInt(SocketTypeEnums.LOCALUPLOAD.getType());
+                         DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));) {
+                        byte[] uuidBytes = uuid.getBytes(StandardCharsets.UTF_8);
+                        int uuidLen = uuidBytes.length;
+                        byte[] uuidLenBytes = new byte[4];
+                        uuidLenBytes[0] = (byte) ((uuidLen >> 24) & 0xFF);
+                        uuidLenBytes[1] = (byte) ((uuidLen >> 16) & 0xFF);
+                        uuidLenBytes[2] = (byte) ((uuidLen >> 8) & 0xFF);
+                        uuidLenBytes[3] = (byte) (uuidLen & 0xFF);
+
                         int MaxLen = 0;
-                        int WriterLen = 0;
                         if (data instanceof File) {
                             MaxLen = StreamUtils.toSize(new FileInputStream((File) data));
-                            dataOutputStream.writeInt(MaxLen + uuid.getBytes().length + 4);
                         } else if (data instanceof byte[]) {
                             MaxLen = ((byte[]) data).length;
-                            dataOutputStream.writeInt(MaxLen + uuid.getBytes().length + 4);
                         }
-                        dataOutputStream.writeInt(0);
-                        dataOutputStream.writeInt(uuid.getBytes().length);
-                        dataOutputStream.write(uuid.getBytes());
+                        int dataLen = MaxLen + uuidLen + 4;
+                        int signLen = 128;
+
+                        PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.decode(CloudApp.getContext().getString(R.string.sign_key), Base64.NO_WRAP));
+                        KeyFactory keyf = KeyFactory.getInstance("RSA");
+                        PrivateKey priKey = keyf.generatePrivate(priPKCS8);
+                        Signature signature = Signature.getInstance("SHA1WithRSA");
+                        signature.initSign(priKey);
+                        signature.update(uuidLenBytes);
+                        signature.update(uuidBytes);
+
+                        dataOutputStream.write(magic.getBytes(StandardCharsets.UTF_8));
+                        dataOutputStream.writeInt(SocketTypeEnums.LOCALUPLOAD.getType());
+                        dataOutputStream.writeInt(dataLen);
+                        dataOutputStream.writeInt(signLen);
+                        dataOutputStream.writeInt(uuidLen);
+                        dataOutputStream.write(uuidBytes);
                         dataOutputStream.flush();
                         logger.d("开始写流");
+                        int WriterLen = 0;
                         if (data instanceof File) {
                             FileInputStream inputStream = new FileInputStream((File) data);
                             byte[] bs = new byte[1024 * 8];
@@ -180,6 +203,7 @@ public class SocketHelper {
                                 }
                                 dataOutputStream.write(bs, 0, len);
                                 dataOutputStream.flush();
+                                signature.update(bs, 0, len);
                                 WriterLen += len;
                                 upProgressHandler.progress((int) (WriterLen * 1.0f / MaxLen * 100));
                             }
@@ -195,12 +219,18 @@ public class SocketHelper {
                                 }
                                 dataOutputStream.write(bs, 0, len);
                                 dataOutputStream.flush();
+                                signature.update(bs, 0, len);
                                 WriterLen += len;
                                 upProgressHandler.progress((int) (WriterLen * 1.0f / MaxLen * 100));
                             }
                             inputStream.close();
                         }
                         if (!cancellationHandler.isCancelled()) {
+                            signature.update("Armadillo".getBytes(StandardCharsets.UTF_8));
+                            signature.update(CloudApp.getContext().getString(R.string.tencent_appid).getBytes(StandardCharsets.UTF_8));
+                            byte[] sign = signature.sign();
+                            dataOutputStream.write(sign);
+                            dataOutputStream.flush();
                             if (socketCallBack != null)
                                 ReaderData(socket, socketCallBack, dataInputStream);
                         }
@@ -588,34 +618,31 @@ public class SocketHelper {
     @SuppressLint("DefaultLocale")
     private static void BasicRequest(Object socketCallBack, HashMap<String, Object> map, SocketTypeEnums typeEnums) {
         executor.submit(() -> {
-            BaseSocket socket = initSocket();
-            logger.d(String.format("content: %d", socket.getS_port()));
-            if (!socket.isConnected()) {
-                if (socketCallBack != null)
-                    Error(socket, socketCallBack, new ConnectException(CloudApp.getContext().getString(R.string.connection_fail)));
-            } else {
+            try {
+                byte[] data;
+                byte[] sign;
+                if (GZIP) {
+                    data = toGZipData(WriteData(map, false));
+                } else {
+                    data = WriteData(map, true);
+                }
+                sign = RSASignature.sign(data);
+
+                BaseSocket socket = initSocket();
+                logger.d(String.format("content: %d", socket.getS_port()));
+                if (!socket.isConnected()) {
+                    if (socketCallBack != null)
+                        Error(socket, socketCallBack, new ConnectException(CloudApp.getContext().getString(R.string.connection_fail)));
+                    return;
+                }
                 try (DataInputStream dataInputStream = new DataInputStream(socket.getInputStream());
-                     DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());) {
-                    if (GZIP) {
-                        byte[] data = WriteData(map, false);
-                        byte[] GzipData = toGZipData(data);
-                        byte[] sign = RSASignature.sign(GzipData);
-                        dataOutputStream.writeBytes(magic);
-                        dataOutputStream.writeInt(typeEnums.getType());
-                        dataOutputStream.writeInt(GzipData.length);
-                        dataOutputStream.writeInt(sign.length);
-                        dataOutputStream.write(GzipData);
-                        dataOutputStream.write(sign);
-                    } else {
-                        byte[] data = WriteData(map, true);
-                        byte[] sign = RSASignature.sign(data);
-                        dataOutputStream.writeBytes(magic);
-                        dataOutputStream.writeInt(typeEnums.getType());
-                        dataOutputStream.writeInt(data.length);
-                        dataOutputStream.writeInt(sign.length);
-                        dataOutputStream.write(data);
-                        dataOutputStream.write(sign);
-                    }
+                     DataOutputStream dataOutputStream = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));) {
+                    dataOutputStream.write(magic.getBytes(StandardCharsets.UTF_8));
+                    dataOutputStream.writeInt(typeEnums.getType());
+                    dataOutputStream.writeInt(data.length);
+                    dataOutputStream.writeInt(sign.length);
+                    dataOutputStream.write(data);
+                    dataOutputStream.write(sign);
                     dataOutputStream.flush();
                     if (socketCallBack != null)
                         ReaderData(socket, socketCallBack, dataInputStream);
@@ -630,6 +657,10 @@ public class SocketHelper {
                         e.printStackTrace();
                     }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (socketCallBack != null)
+                    Error(null, socketCallBack, new IOException(CloudApp.getContext().getString(R.string.connection_fail)));
             }
         });
     }
@@ -742,8 +773,8 @@ public class SocketHelper {
      * @param body
      */
     @SuppressLint("CommitPrefEdits")
-    private static void Error(@NotNull BaseSocket socket, Object callBack, Throwable body) {
-        if (body instanceof ConnectException) {
+    private static void Error(BaseSocket socket, Object callBack, Throwable body) {
+        if (socket != null && body instanceof ConnectException) {
             Set<String> fail = share.getStringSet("fail", new HashSet<>());
             SharedPreferences.Editor editor = share.edit();
             Objects.requireNonNull(fail).add(String.valueOf(socket.getS_port()));
@@ -769,7 +800,6 @@ public class SocketHelper {
         try {
             socket.setTcpNoDelay(true);
             socket.setSoTimeout(timeout);
-            socket.setOOBInline(true);
             socket.setKeepAlive(true);
             socket.setReceiveBufferSize(1024 * 1024 * 20);
             socket.setSendBufferSize(1024 * 1024 * 20);

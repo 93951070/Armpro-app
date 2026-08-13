@@ -1,3 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <declare-styleable name="ChartLineView">
+        <attr name="cl_background" format="color" />
+        <attr name="cl_axesColor" format="color" />
+        <attr name="cl_axesWidth" format="dimension" />
+        <attr name="cl_divideWith" format="dimension" />
+        <attr name="cl_divideHeight" format="dimension" />
+        <attr name="cl_divideColor" format="color" />
+        <attr name="cl_divide_hideOdd" format="boolean" />
+        <attr name="cl_textColor" format="color" />
+        <attr name="cl_textSize" format="dimension" />
+        <attr name="cl_max" format="integer" />
+        <attr name="cl_span" format="integer" />
+        <attr name="cl_hideY" format="boolean" />
+        <attr name="cl_Y_showDash" format="boolean" />
+        <attr name="cl_Y_dashColor" format="color" />
+        <attr name="cl_Y_dashWith" format="dimension" />
+        <attr name="cl_Y_dashDivide" format="dimension" />
+        <attr name="cl_Y_dash_solidLength" format="dimension" />
+        <attr name="cl_remind_textSize" format="dimension" />
+        <attr name="cl_remind_textColor" format="color" />
+        <attr name="cl_remind_backColor" format="color" />
+        <attr name="cl_dashColor" format="color" />
+        <attr name="cl_dashWith" format="dimension" />
+        <attr name="cl_dashDivide" format="dimension" />
+        <attr name="cl_dash_solidLength" format="dimension" />
+        <attr name="cl_dashStay_duration" format="integer" />
+        <attr name="cl_isOnTouch" format="boolean" />
+        <attr name="cl_lineAnim_duration" format="integer" />
+        <attr name="cl_isCurve" format="boolean" />
+    </declare-styleable>
+    <declare-styleable name="ChartCircleView">
+        <attr name="cv_background" format="color" />
+        <attr name="cv_textSize" format="dimension" />
+        <attr name="cv_textColor" format="color" />
+        <attr name="cv_startAngle" format="integer" />
+        <attr name="cv_rate" format="float" />
+        <attr name="cv_animDuration" format="integer" />
+        <attr name="cv_isArc" format="boolean" />
+        <attr name="cv_isAnim" format="boolean" />
+    </declare-styleable>
 </resources>
