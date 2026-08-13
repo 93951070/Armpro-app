@@ -27,7 +27,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -116,6 +115,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel> implements SwipeRe
         recycler.setLayoutManager(new LinearLayoutManager(requireActivity()));
         recycler.setAdapter(taskAdapter);
         recycler.setHasFixedSize(true);
+        refresh.setColorSchemeResources(R.color.colorPrimary);
         taskAdapter.setAnimationEnable(true);
         taskAdapter.setAnimationFirstOnly(false);
         taskAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.AlphaIn);
@@ -129,7 +129,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel> implements SwipeRe
         taskAdapter.setOnItemChildLongClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.cardview) return true;
             if (refresh.isRefreshing()) return true;
-            new AlertDialog.Builder(requireActivity())
+            new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
                     .setTitle(R.string.dialog_tips)
                     .setMessage(R.string.delete_task)
                     .setPositiveButton(R.string.cancel, null)
@@ -229,7 +229,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel> implements SwipeRe
                                     ArrayAdapter<KeyFile> spinner_adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, files);
                                     spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                     Objects.requireNonNull(signer_spinner).setAdapter(spinner_adapter);
-                                    new AlertDialog.Builder(requireActivity())
+                                    new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
                                             .setView(root_view)
                                             .setNegativeButton(R.string.cancel, null)
                                             .setPositiveButton(R.string.ok, (dialog1, which) -> {
@@ -401,7 +401,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel> implements SwipeRe
                 if (Build.VERSION.SDK_INT >= 23) {
                     if (Settings.canDrawOverlays(requireActivity())) {
                         if (Accessibility.isAccessibilitySettingsOn(requireActivity())) {
-                            new AlertDialog.Builder(requireActivity())
+                            new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
                                     .setTitle(R.string.dialog_tips)
                                     .setMessage(R.string.not_auxiliary)
                                     .setNegativeButton(R.string.open, (dialogInterface, i) -> {
@@ -414,7 +414,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel> implements SwipeRe
                             requireActivity().startService(new Intent(requireActivity(), TopServer.class));
                         }
                     } else {
-                        new AlertDialog.Builder(requireActivity())
+                        new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
                                 .setTitle(R.string.dialog_tips)
                                 .setMessage(R.string.not_windows)
                                 .setNegativeButton(R.string.open, (dialogInterface, i) -> {
@@ -427,7 +427,7 @@ public class HomeFragment extends BaseFragment<HomeViewModel> implements SwipeRe
                     }
                 } else {
                     if (Accessibility.isAccessibilitySettingsOn(requireActivity())) {
-                        new AlertDialog.Builder(requireActivity())
+                        new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
                                 .setTitle(R.string.dialog_tips)
                                 .setMessage(R.string.not_auxiliary)
                                 .setNegativeButton(R.string.open, (dialogInterface, i) -> {
@@ -575,42 +575,58 @@ public class HomeFragment extends BaseFragment<HomeViewModel> implements SwipeRe
         ArrayAdapter<KeyFile> spinner_adapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, files);
         spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         Objects.requireNonNull(signer_spinner).setAdapter(spinner_adapter);
-        new AlertDialog.Builder(requireActivity())
+        new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
                 .setView(root_view)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.ok, (dialog1, which) -> {
-                    int signer_type = 0;
+                    int selectedSignerType = 0;
                     switch (signer_mode_spinner.getSelectedItemPosition()) {
                         case 0:
-                            signer_type = SignerEnums.V1.getType();
+                            selectedSignerType = SignerEnums.V1.getType();
                             break;
                         case 1:
-                            signer_type = SignerEnums.V1.getType() | SignerEnums.V2.getType();
+                            selectedSignerType = SignerEnums.V1.getType() | SignerEnums.V2.getType();
                             break;
                         case 2:
-                            signer_type = SignerEnums.V2.getType();
+                            selectedSignerType = SignerEnums.V2.getType();
                             break;
                         case 3:
-                            signer_type = SignerEnums.V1.getType() | SignerEnums.V2.getType() | SignerEnums.V3.getType();
+                            selectedSignerType = SignerEnums.V1.getType() | SignerEnums.V2.getType() | SignerEnums.V3.getType();
                             break;
                         case 4:
-                            signer_type = SignerEnums.V2.getType() | SignerEnums.V3.getType();
+                            selectedSignerType = SignerEnums.V2.getType() | SignerEnums.V3.getType();
                             break;
                         case 5:
-                            signer_type = SignerEnums.V3.getType();
+                            selectedSignerType = SignerEnums.V3.getType();
                             break;
                     }
+                    final int signer_type = selectedSignerType;
                     try {
                         KeyInfo keyInfo = new Gson().fromJson(new String(StreamUtils.toByte(new FileInputStream(files.get(signer_spinner.getSelectedItemPosition()))), StandardCharsets.UTF_8), KeyInfo.class);
                         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
                             BaleDialog.ShowInfo(requireActivity(), getString(R.string.signer_ver_fail));
                             return;
                         }
-                        BaleDialog.ShowDialog(getActivity(), SignerApk.SignApk(new File(Path),
-                                new ByteArrayInputStream(Base64.decode(keyInfo.getSigner(), Base64.NO_WRAP)),
-                                keyInfo.getPassWord(),
-                                keyInfo.getAliasPass(),
-                                false, signer_type));
+                        LoadingDialog.getInstance().show(requireActivity());
+                        CloudApp.getCachedThreadPool().execute(() -> {
+                            try {
+                                File signedFile = SignerApk.SignApk(new File(Path),
+                                        new ByteArrayInputStream(Base64.decode(keyInfo.getSigner(), Base64.NO_WRAP)),
+                                        keyInfo.getPassWord(),
+                                        keyInfo.getAliasPass(),
+                                        false, signer_type);
+                                new Handler(Looper.getMainLooper()).post(() -> {
+                                    LoadingDialog.getInstance().hide();
+                                    BaleDialog.ShowDialog(getActivity(), signedFile);
+                                });
+                            } catch (Exception e) {
+                                new Handler(Looper.getMainLooper()).post(() -> {
+                                    LoadingDialog.getInstance().hide();
+                                    BaleDialog.ShowErrorDialog(getActivity(), e);
+                                    Log.e(TAG, String.format(getString(R.string.exception), e.getMessage()));
+                                });
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                         BaleDialog.ShowErrorDialog(getActivity(), e);

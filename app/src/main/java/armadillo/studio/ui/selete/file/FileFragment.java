@@ -184,7 +184,7 @@ public class FileFragment extends BaseFragment<FileViewModel> implements SwipeRe
     }
 
     private void setResultDialog(@NotNull File var) {
-        new AlertDialog.Builder(requireActivity())
+        new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
                 .setMessage(getString(R.string.dialog_selete) + var.getName())
                 .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
                     Intent intent = new Intent();

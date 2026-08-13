@@ -63,7 +63,7 @@ public class SingleTrialManage extends BaseActivity<UserSoft.data> {
         if (trialInfos.size() == 0)
             Toast.makeText(this, "Data Null", Toast.LENGTH_LONG).show();
         else
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.PaperDialog)
                     .setTitle(R.string.dialog_tips)
                     .setMessage(R.string.dialog_delete_single_trial_all)
                     .setPositiveButton(R.string.cancel, null)
@@ -160,7 +160,7 @@ public class SingleTrialManage extends BaseActivity<UserSoft.data> {
             }, data.getAppkey(), offset, limit);
         });
         adapter.setOnItemChildLongClickListener((adapter, view, position) -> {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.PaperDialog)
                     .setTitle(getString(R.string.dialog_editor) + trialInfos.get(position).getMac())
                     .setSingleChoiceItems(new String[]{getString(R.string.dialog_delete), getString(R.string.dialog_editor_trial_count)}, -1, (dialogInterface, i) -> {
                         dialogInterface.dismiss();
@@ -196,7 +196,7 @@ public class SingleTrialManage extends BaseActivity<UserSoft.data> {
                                 EditText count_text = new EditText(SingleTrialManage.this);
                                 count_text.setInputType(InputType.TYPE_CLASS_NUMBER);
                                 count_text.setHint(R.string.single_item_trial_count);
-                                new AlertDialog.Builder(this)
+                                new AlertDialog.Builder(this, R.style.PaperDialog)
                                         .setTitle(getString(R.string.dialog_editor) + trialInfos.get(position).getMac())
                                         .setView(count_text)
                                         .setNegativeButton(R.string.ok, (dialogInterface1, i1) -> {

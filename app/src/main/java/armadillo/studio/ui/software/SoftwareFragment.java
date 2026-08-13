@@ -82,7 +82,7 @@ public class SoftwareFragment extends BaseFragment<SoftwareViewModel> implements
         });
         softwareAdapter.setOnItemChildLongClickListener((adapter, view, position) -> {
             if (view.getId() != R.id.cardview) return true;
-            new AlertDialog.Builder(requireActivity())
+            new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
                     .setTitle(R.string.dialog_tips)
                     .setMessage(R.string.dialog_delete_soft)
                     .setPositiveButton(R.string.cancel, null)

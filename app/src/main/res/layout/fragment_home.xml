@@ -10,17 +10,18 @@
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_height="match_parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="@dimen/fab_margin"
-            android:scrollbars="vertical" />
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="88dp"
+            android:scrollbars="none" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -28,12 +29,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
+        android:layout_margin="16dp"
         android:src="@drawable/ic_add"
         android:transitionName="add"
         app:backgroundTint="@color/colorPrimary"
-        app:elevation="8dp"
+        app:elevation="6dp"
         app:fabSize="normal"
-        app:pressedTranslationZ="12dp"
-        app:tint="@color/white" />
+        app:hoveredFocusedTranslationZ="8dp"
+        app:pressedTranslationZ="8dp"
+        app:rippleColor="@color/primary_light"
+        app:tint="@color/white"
+        app:useCompatPadding="true" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

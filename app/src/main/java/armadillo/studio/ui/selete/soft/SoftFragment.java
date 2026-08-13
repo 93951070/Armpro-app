@@ -1,9 +1,10 @@
 package armadillo.studio.ui.selete.soft;
 
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,13 +17,17 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import armadillo.studio.CloudApp;
 import armadillo.studio.R;
 import armadillo.studio.adapter.SoftAdapter;
 import armadillo.studio.common.base.BaseFragment;
+import armadillo.studio.common.utils.ApkCopyUtil;
 import armadillo.studio.model.apk.PackageInfos;
+import armadillo.studio.widget.LoadingDialog;
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -57,7 +62,8 @@ public class SoftFragment extends BaseFragment<SoftViewModel> implements SwipeRe
         recycler.setLayoutManager(new LinearLayoutManager(requireActivity()));
         recycler.setHasFixedSize(true);
         recycler.setAdapter(softAdapter);
-        softAdapter.setEmptyView(R.layout.status_loading);
+        refresh.setColorSchemeResources(R.color.colorPrimary);
+        softAdapter.setEmptyView(R.layout.status_empty);
         softAdapter.setAnimationEnable(true);
         softAdapter.setAnimationFirstOnly(false);
         softAdapter.setAnimationWithDefault(BaseQuickAdapter.AnimationType.AlphaIn);
@@ -66,25 +72,22 @@ public class SoftFragment extends BaseFragment<SoftViewModel> implements SwipeRe
             if (view.getId() != R.id.cardview) return;
             if (refresh.isRefreshing()) return;
             PackageInfos infos = data.get(position);
+            String sourceDir = infos.getPackageInfo().applicationInfo.sourceDir;
+            boolean fromDataApp = sourceDir != null && sourceDir.startsWith("/data/app/");
+
             if (infos.isJiagu_flag()) {
-                new AlertDialog.Builder(requireActivity())
-                        .setMessage(infos.getName() + "\n该应用很有可能是" + infos.getJiagu() + "不建议你选择加固的应用")
+                new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
+                        .setMessage(infos.getName() + "\n该应用很有可能是" + infos.getJiagu() + "，不建议选择加固的应用")
                         .setPositiveButton(R.string.dialog_have_selete, (dialogInterface, i) -> {
-                            Intent intent = new Intent();
-                            intent.putExtra("path", infos.getPackageInfo().applicationInfo.sourceDir);
-                            requireActivity().setResult(100, intent);
-                            requireActivity().finishAfterTransition();
+                            selectApp(sourceDir);
                         })
                         .setNegativeButton(R.string.cancel, null)
                         .show();
             } else {
-                new AlertDialog.Builder(requireActivity())
+                new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
                         .setMessage(getString(R.string.dialog_selete) + infos.getName())
                         .setPositiveButton(R.string.ok, (dialogInterface, i) -> {
-                            Intent intent = new Intent();
-                            intent.putExtra("path", infos.getPackageInfo().applicationInfo.sourceDir);
-                            requireActivity().setResult(100, intent);
-                            requireActivity().finishAfterTransition();
+                            selectApp(sourceDir);
                         })
                         .setNegativeButton(R.string.cancel, null)
                         .show();
@@ -98,6 +101,33 @@ public class SoftFragment extends BaseFragment<SoftViewModel> implements SwipeRe
             isload = true;
             search.setOnClickListener(this);
         }, requireActivity());
+    }
+
+    private void selectApp(String sourceDir) {
+        boolean fromDataApp = sourceDir != null && sourceDir.startsWith("/data/app/");
+        if (fromDataApp || !new File(sourceDir).canRead()) {
+            // 需要先复制到缓存
+            LoadingDialog.getInstance().show(requireActivity());
+            CloudApp.getCachedThreadPool().execute(() -> {
+                File cachedFile = ApkCopyUtil.copyToCacheIfNeeded(requireActivity(), sourceDir);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    LoadingDialog.getInstance().hide();
+                    if (cachedFile != null) {
+                        Intent intent = new Intent();
+                        intent.putExtra("path", cachedFile.getAbsolutePath());
+                        requireActivity().setResult(100, intent);
+                        requireActivity().finishAfterTransition();
+                    } else {
+                        Toast.makeText(requireActivity(), "无法读取应用文件，请从文件管理器选择APK", Toast.LENGTH_LONG).show();
+                    }
+                });
+            });
+        } else {
+            Intent intent = new Intent();
+            intent.putExtra("path", sourceDir);
+            requireActivity().setResult(100, intent);
+            requireActivity().finishAfterTransition();
+        }
     }
 
     @OnClick(R.id.add)

@@ -218,7 +218,7 @@ public class ArchiveZip {
                         if (isExistsMethod(taskInfo.getOld())) {
                             LoadingDialog.getInstance().hide();
                             new Handler(Looper.getMainLooper()).post(() -> {
-                                new AlertDialog.Builder(context)
+                                new AlertDialog.Builder(context, R.style.PaperDialog)
                                         .setTitle(R.string.dialog_tips)
                                         .setMessage(R.string.dialog_tips_fixer)
                                         .setPositiveButton(R.string.no_fixer, (dialog, which) -> {

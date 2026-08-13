@@ -1,10 +1,7 @@
-/*
- * Copyright (c) 2021. Armadillo
- */
-
 package armadillo.studio.common.jks;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
@@ -34,6 +31,7 @@ import java.text.SimpleDateFormat;
 
 import armadillo.studio.CloudApp;
 import armadillo.studio.R;
+import armadillo.studio.common.utils.ApkCopyUtil;
 import armadillo.studio.common.utils.MD5Utils;
 import armadillo.studio.common.enums.SignerEnums;
 
@@ -41,22 +39,27 @@ public class SignerApk {
     @NotNull
     @SuppressLint("SimpleDateFormat")
     public static File SignApk(@NotNull File Input, InputStream stream, @NotNull String Pass, @NotNull String AliasPass, boolean deleteInput, int signer_type) throws ApkFormatException, SignatureException, NoSuchAlgorithmException, InvalidKeyException, IOException, KeyStoreException, UnrecoverableKeyException, CertificateException {
-        // If the input APK is not readable (e.g. installed app under /data/app/),
-        // copy it to the app's cache directory first to avoid EACCES errors.
+        // 如果是 /data/app/ 路径（已安装应用），先复制到缓存目录解决 EACCES 权限问题
         File apkToSign = Input;
-        boolean copiedToCache = false;
-        if (!Input.canRead()) {
-            File cacheDir = CloudApp.getContext().getCacheDir();
-            File tempApk = new File(cacheDir, "temp_sign_" + System.currentTimeMillis() + ".apk");
-            try (FileChannel src = new FileInputStream(Input).getChannel();
-                 FileChannel dst = new FileOutputStream(tempApk).getChannel()) {
-                dst.transferFrom(src, 0, src.size());
+        File cachedCopy = null;
+        boolean needsCopy = Input.getAbsolutePath().startsWith("/data/app/");
+        if (needsCopy || !Input.canRead()) {
+            Context ctx = CloudApp.getContext();
+            cachedCopy = ApkCopyUtil.copyToCacheIfNeeded(ctx, Input.getAbsolutePath());
+            if (cachedCopy != null) {
+                apkToSign = cachedCopy;
             }
-            apkToSign = tempApk;
-            copiedToCache = true;
         }
+
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("_HH_mm_ss");
-        File out = new File(apkToSign.getAbsolutePath().replace(".apk", simpleDateFormat.format(System.currentTimeMillis()) + "_Sign.apk"));
+        // 输出文件始终放在外部存储的应用目录下，确保有写权限
+        File outDir = new File(CloudApp.getContext().getExternalFilesDir(null), "signed");
+        if (!outDir.exists()) {
+            outDir.mkdirs();
+        }
+        String baseName = apkToSign.getName().replace(".apk", "");
+        File out = new File(outDir, baseName + simpleDateFormat.format(System.currentTimeMillis()) + "_Sign.apk");
+
         KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
         keyStore.load(stream, Pass.toCharArray());
         String alias = keyStore.aliases().nextElement();
@@ -88,11 +91,14 @@ public class SignerApk {
         }
         ApkSigner ApkSigner = builder.build();
         ApkSigner.sign();
-        if (deleteInput)
+
+        // 清理缓存副本
+        if (cachedCopy != null && cachedCopy.exists()) {
+            cachedCopy.delete();
+        }
+        if (deleteInput) {
             Input.delete();
-        // Clean up the temporary cached copy if we made one
-        if (copiedToCache)
-            apkToSign.delete();
+        }
         return out;
     }
 

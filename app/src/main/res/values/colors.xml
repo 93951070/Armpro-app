@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- ===== 纸片ui 主色调：柔和靛蓝 + 珊瑚粉强调 ===== -->
-    <color name="colorPrimary">#5B6EF5</color>
-    <color name="colorPrimaryDark">#4A5BD4</color>
-    <color name="colorPrimaryVariant">#7B8AF5</color>
-    <color name="colorAccent">#FF6B6B</color>
+    <!-- ===== 纸片ui 主色调：柔和粉色系 ===== -->
+    <color name="colorPrimary">#FF6B8A</color>
+    <color name="colorPrimaryDark">#E8557A</color>
+    <color name="colorPrimaryVariant">#FF8DA6</color>
+    <color name="colorAccent">#FF6B8A</color>
 
     <!-- Primary tonal variants -->
-    <color name="primary_light">#8B9BF7</color>
-    <color name="primary_dark">#3D4FB8</color>
+    <color name="primary_light">#FFB3C6</color>
+    <color name="primary_dark">#D94D6E</color>
 
-    <!-- Accent / coral -->
-    <color name="accent">#FF6B6B</color>
+    <!-- Accent / warm pink -->
+    <color name="accent">#FF6B8A</color>
 
     <!-- ===== 表面与背景 ===== -->
     <color name="surface">#FFFFFF</color>
     <color name="on_surface">#2C2C2C</color>
-    <color name="background">#F5F7FA</color>
+    <color name="background">#FFF5F7</color>
 
     <!-- ===== 语义颜色 ===== -->
     <color name="error">#FF5252</color>
@@ -25,7 +25,7 @@
 
     <!-- ===== 卡片 ===== -->
     <color name="card_bg">#FFFFFF</color>
-    <color name="card_shadow">#1F000000</color>
+    <color name="card_shadow">#14FF6B8A</color>
 
     <!-- ===== 文字 ===== -->
     <color name="text_primary">#2C2C2C</color>
@@ -33,33 +33,33 @@
     <color name="text_hint">#CCCCCC</color>
 
     <!-- ===== 分割线 ===== -->
-    <color name="divider">#EFF0F3</color>
+    <color name="divider">#FFE8ED</color>
 
     <!-- ===== 导航 ===== -->
-    <color name="nav_item_active">#5B6EF5</color>
-    <color name="nav_item_inactive">#AAAAAA</color>
+    <color name="nav_item_active">#FF6B8A</color>
+    <color name="nav_item_inactive">#CCCCCC</color>
 
-    <!-- ===== 渐变（蓝→紫柔和色） ===== -->
-    <color name="gradient_start">#5B6EF5</color>
-    <color name="gradient_end">#8B7FF5</color>
+    <!-- ===== 渐变（粉色柔和色） ===== -->
+    <color name="gradient_start">#FF6B8A</color>
+    <color name="gradient_end">#FFB3C6</color>
 
     <!-- ===== 粉色渐变（强调按钮） ===== -->
-    <color name="gradient_pink_start">#FF6B6B</color>
-    <color name="gradient_pink_end">#FF8E8E</color>
+    <color name="gradient_pink_start">#FF6B8A</color>
+    <color name="gradient_pink_end">#FF8DA6</color>
 
     <!-- ===== Legacy / existing palette (kept for compatibility) ===== -->
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
-    <color name="divider_color">#EFF0F3</color>
-    <color name="blue">#5B6EF5</color>
-    <color name="grey_5">#F5F7FA</color>
+    <color name="divider_color">#FFE8ED</color>
+    <color name="blue">#FF6B8A</color>
+    <color name="grey_5">#FFF5F7</color>
     <color name="grey_80">#2C2C2C</color>
     <color name="grey_60">#999999</color>
     <color name="grey_40">#AAAAAA</color>
     <color name="grey_90">#2C2C2C</color>
-    <color name="cyan_300">#4DD0E1</color>
-    <color name="red_300">#FF6B6B</color>
+    <color name="cyan_300">#FF8DA6</color>
+    <color name="red_300">#FF6B8A</color>
     <color name="red">#FF5252</color>
-    <color name="helper">#5B6EF5</color>
+    <color name="helper">#FF6B8A</color>
 
 </resources>

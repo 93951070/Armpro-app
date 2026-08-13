@@ -200,7 +200,7 @@ public class SingleCardManage extends BaseActivity<UserSoft.data> {
          * 长按卡密
          */
         adapter.setOnItemChildLongClickListener((adapter, view, position) -> {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.PaperDialog)
                     .setTitle(getString(R.string.dialog_editor) + cardInfos.get(position).getCard())
                     .setSingleChoiceItems(new String[]{getString(R.string.dialog_delete), getString(R.string.dialog_frozen), getString(R.string.dialog_untie)}, -1, (dialogInterface, i) -> {
                         dialogInterface.dismiss();
@@ -326,7 +326,7 @@ public class SingleCardManage extends BaseActivity<UserSoft.data> {
                     if (cardInfos.size() == 0)
                         Toast.makeText(this, "Data Null", Toast.LENGTH_LONG).show();
                     else
-                        new AlertDialog.Builder(this)
+                        new AlertDialog.Builder(this, R.style.PaperDialog)
                                 .setTitle(R.string.dialog_tips)
                                 .setMessage(R.string.dialog_delete_single_card_all)
                                 .setPositiveButton(R.string.cancel, null)
@@ -360,7 +360,7 @@ public class SingleCardManage extends BaseActivity<UserSoft.data> {
                     if (cardInfos.size() == 0)
                         Toast.makeText(this, "Data Null", Toast.LENGTH_LONG).show();
                     else {
-                        new AlertDialog.Builder(this)
+                        new AlertDialog.Builder(this, R.style.PaperDialog)
                                 .setTitle(R.string.dialog_tips)
                                 .setMessage(R.string.dialog_export_all)
                                 .setPositiveButton(R.string.cancel, null)
@@ -379,7 +379,7 @@ public class SingleCardManage extends BaseActivity<UserSoft.data> {
                                         FileOutputStream exp = new FileOutputStream(tmp);
                                         exp.write(buffer.toString().getBytes());
                                         exp.close();
-                                        new AlertDialog.Builder(this)
+                                        new AlertDialog.Builder(this, R.style.PaperDialog)
                                                 .setTitle(R.string.dialog_tips)
                                                 .setMessage(getString(R.string.dialog_export_success) + tmp.getAbsolutePath())
                                                 .setPositiveButton(R.string.cancel, null)

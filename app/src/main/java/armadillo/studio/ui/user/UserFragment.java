@@ -147,7 +147,7 @@ public class UserFragment extends BaseFragment<UserViewModel> {
                 if (other == null)
                     return;
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_verify_code, null);
-                new AlertDialog.Builder(requireContext(), R.style.cornerdialog)
+                new AlertDialog.Builder(requireContext(), R.style.PaperDialog)
                         .setView(view)
                         .show();
                 TextInputEditText card1 = view.findViewById(R.id.card_1);

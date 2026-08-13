@@ -565,7 +565,7 @@ public class MainActivity extends AppCompatActivity {
                     .into(headerImg);
         }
         headerImg.setOnClickListener(v -> {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.PaperDialog)
                     .setTitle(R.string.dialog_tips)
                     .setMessage(R.string.logout)
                     .setNegativeButton(R.string.cancel, null)
@@ -658,7 +658,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void firstHelper() {
         if (CloudApp.getSharedPreferences().getBoolean("first_start", true)) {
-            new AlertDialog.Builder(this)
+            new AlertDialog.Builder(this, R.style.PaperDialog)
                     .setTitle(R.string.dialog_tips)
                     .setMessage(R.string.handle_desc)
                     .setCancelable(false)

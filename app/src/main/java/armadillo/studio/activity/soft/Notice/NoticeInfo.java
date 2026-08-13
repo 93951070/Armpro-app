@@ -272,7 +272,7 @@ public class NoticeInfo extends BaseActivity<UserSoft.data> {
                 if (paste != null) {
                     try {
                         SoftNoticeInfo.data data = new Gson().fromJson(new String(Base64.decode(paste, Base64.NO_WRAP)), SoftNoticeInfo.data.class);
-                        new AlertDialog.Builder(this)
+                        new AlertDialog.Builder(this, R.style.PaperDialog)
                                 .setTitle(R.string.dialog_tips)
                                 .setMessage(R.string.dialog_import_config)
                                 .setNegativeButton(R.string.ok, (dialog, which) -> {

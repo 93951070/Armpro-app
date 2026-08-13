@@ -44,14 +44,23 @@ public class SoftViewModel extends BaseViewModel<List<PackageInfos>> {
                     if (activity.isDestroyed())
                         return;
                     if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) == 0
-                            && packageInfo.applicationInfo.sourceDir != null
-                            && new File(packageInfo.applicationInfo.sourceDir).canRead()) {
+                            && packageInfo.applicationInfo.sourceDir != null) {
                         PackageInfos infos = new PackageInfos();
                         infos.setPackageInfo(packageInfo);
                         infos.setName(packageInfo.applicationInfo.loadLabel(pm).toString());
-                        infos.setSize(FileSize.getAutoFileOrFileSize(packageInfo.applicationInfo.sourceDir));
-                        infos.setIco(AppUtils.getApkDrawable(packageInfo.applicationInfo.sourceDir));
-                        AnalysisJiaGu(packageInfo.applicationInfo.sourceDir, infos);
+                        String sourceDir = packageInfo.applicationInfo.sourceDir;
+                        File sourceFile = new File(sourceDir);
+                        if (sourceFile.canRead()) {
+                            infos.setSize(FileSize.getAutoFileOrFileSize(sourceDir));
+                            infos.setIco(AppUtils.getApkDrawable(sourceDir));
+                            AnalysisJiaGu(sourceDir, infos);
+                        } else {
+                            // Android 11+ /data/app/ 可能无法直接读取
+                            infos.setSize("");
+                            infos.setIco(pm.getApplicationIcon(packageInfo.applicationInfo));
+                            infos.setJiagu("点击选择后自动处理");
+                            infos.setJiagu_flag(false);
+                        }
                         newpackages.add(infos);
                     }
                 }

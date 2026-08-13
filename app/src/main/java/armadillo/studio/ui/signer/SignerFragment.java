@@ -92,7 +92,7 @@ public class SignerFragment extends BaseFragment<SignerViewModel> implements Swi
         adapter.setFooterView(LayoutInflater.from(requireActivity()).inflate(R.layout.status_footer, null));
         adapter.addChildLongClickViewIds(R.id.cardview);
         adapter.setOnItemChildLongClickListener((adapter, view, position) -> {
-            new AlertDialog.Builder(requireActivity())
+            new AlertDialog.Builder(requireActivity(), R.style.PaperDialog)
                     .setTitle(getString(R.string.dialog_editor) + signer.get(position).getName().replace(".key", ""))
                     .setSingleChoiceItems(new String[]{getString(R.string.dialog_delete), getString(R.string.menu_export)}, -1, (dialogInterface, i) -> {
                         dialogInterface.dismiss();

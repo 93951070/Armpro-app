@@ -1,13 +1,15 @@
 package armadillo.studio.widget;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.util.Objects;
 
@@ -15,7 +17,7 @@ import armadillo.studio.R;
 
 public class LoadingDialog {
     private static LoadingDialog loading;
-    private AlertDialog dialog;
+    private Dialog dialog;
     private ProgressDialog progressDialog;
 
     public static LoadingDialog getInstance() {
@@ -32,17 +34,19 @@ public class LoadingDialog {
     public void show(Context context) {
         if (dialog != null && dialog.isShowing())
             dialog.dismiss();
-        dialog = new AlertDialog.Builder(context)
-                .setView(LayoutInflater.from(context).inflate(R.layout.status_loading, null))
-                .setCancelable(false)
-                .show();
+        dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(LayoutInflater.from(context).inflate(R.layout.status_loading, null));
+        dialog.setCancelable(false);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        dialog.show();
     }
 
     public void showProgress(Context context, String msg) {
         if (dialog != null && dialog.isShowing())
             dialog.dismiss();
-        progressDialog = new ProgressDialog(context);
+        progressDialog = new ProgressDialog(context, R.style.PaperDialog);
         progressDialog.setTitle(context.getString(R.string.dialog_tips));
         progressDialog.setMessage(msg);
         progressDialog.setMax(100);
@@ -55,7 +59,7 @@ public class LoadingDialog {
     public void showCancelProgress(Context context, String msg, DialogInterface.OnClickListener listener) {
         if (dialog != null && dialog.isShowing())
             dialog.dismiss();
-        progressDialog = new ProgressDialog(context);
+        progressDialog = new ProgressDialog(context, R.style.PaperDialog);
         progressDialog.setTitle(context.getString(R.string.dialog_tips));
         progressDialog.setMessage(msg);
         progressDialog.setMax(100);
@@ -80,6 +84,7 @@ public class LoadingDialog {
     public void hideProgress() {
         if (progressDialog != null) {
             progressDialog.dismiss();
+            progressDialog = null;
         }
     }
 

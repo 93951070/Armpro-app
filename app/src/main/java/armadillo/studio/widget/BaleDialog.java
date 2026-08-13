@@ -1,11 +1,3 @@
-/*
- * Copyright (c) 2020. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
- * Morbi non lorem porttitor neque feugiat blandit. Ut vitae ipsum eget quam lacinia accumsan.
- * Etiam sed turpis ac ipsum condimentum fringilla. Maecenas magna.
- * Proin dapibus sapien vel ante. Aliquam erat volutpat. Pellentesque sagittis ligula eget metus.
- * Vestibulum commodo. Ut rhoncus gravida arcu.
- */
-
 package armadillo.studio.widget;
 
 
@@ -67,7 +59,7 @@ public class BaleDialog {
     }
 
     private static void Show(Context context, String msg) {
-        new AlertDialog.Builder(context)
+        new AlertDialog.Builder(context, R.style.PaperDialog)
                 .setTitle(R.string.dialog_tips)
                 .setMessage(msg)
                 .setPositiveButton(R.string.cancel, null)
@@ -81,7 +73,7 @@ public class BaleDialog {
     }
 
     private static void Show(Context context, String msg, File out) {
-        AlertDialog install = new AlertDialog.Builder(context)
+        AlertDialog install = new AlertDialog.Builder(context, R.style.PaperDialog)
                 .setTitle(R.string.dialog_tips)
                 .setMessage(msg)
                 .setCancelable(false)
@@ -91,12 +83,12 @@ public class BaleDialog {
         install.getButton(Dialog.BUTTON_POSITIVE).setOnClickListener(view2 -> {
             PackageInfo info = AppUtils.GetPackageInfo(out.getAbsolutePath());
             LoadingDialog.getInstance().show(context);
-            CloudApp.getCachedThreadPool().execute(()->{
+            CloudApp.getCachedThreadPool().execute(() -> {
                 if (AppUtils.isInstalled(context, info.packageName)) {
                     new Handler(Looper.getMainLooper()).post(() -> {
                         LoadingDialog.getInstance().hide();
                         if (!SignerApk.getSignMd5(out).equals(SignerApk.getSignMd5(info.packageName))) {
-                            AlertDialog dialog = new AlertDialog.Builder(context)
+                            AlertDialog dialog = new AlertDialog.Builder(context, R.style.PaperDialog)
                                     .setTitle(R.string.dialog_tips)
                                     .setMessage(R.string.signer_fall)
                                     .setNegativeButton(R.string.cancel, null)
@@ -126,14 +118,14 @@ public class BaleDialog {
 
     public static void ShowInfo(Context context, String msg) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            new AlertDialog.Builder(context)
+            new AlertDialog.Builder(context, R.style.PaperDialog)
                     .setTitle(R.string.dialog_tips)
                     .setMessage(msg)
                     .setPositiveButton(R.string.cancel, null)
                     .show();
         } else
             new Handler(Looper.getMainLooper()).post(() -> {
-                new AlertDialog.Builder(context)
+                new AlertDialog.Builder(context, R.style.PaperDialog)
                         .setTitle(R.string.dialog_tips)
                         .setMessage(msg)
                         .setPositiveButton(R.string.cancel, null)
@@ -143,13 +135,13 @@ public class BaleDialog {
 
     private static void ShowError(Context context, String msg) {
         if (Looper.myLooper() == Looper.getMainLooper()) {
-            new AlertDialog.Builder(context)
+            new AlertDialog.Builder(context, R.style.PaperDialog)
                     .setTitle(R.string.dialog_tips)
                     .setMessage(msg)
                     .setPositiveButton(R.string.cancel, null)
                     .show();
         } else
-            new AlertDialog.Builder(context)
+            new AlertDialog.Builder(context, R.style.PaperDialog)
                     .setTitle(R.string.dialog_tips)
                     .setMessage(msg)
                     .setPositiveButton(R.string.cancel, null)

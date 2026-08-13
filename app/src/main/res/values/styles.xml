@@ -2,7 +2,7 @@
 
     <!--
         纸片ui 主题 — 卡片式扁平化工具类风格
-        基于 Material Components，圆角卡片容器 + 柔和渐变
+        基于 Material Components，粉色系配色 + 圆角卡片
     -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -22,6 +22,8 @@
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:fontFamily">@font/medium</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="alertDialogTheme">@style/PaperDialog</item>
+        <item name="android:alertDialogTheme">@style/PaperDialog</item>
     </style>
 
     <style name="AppTheme.BottomAppBar" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
@@ -29,30 +31,68 @@
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSurface">@color/surface</item>
-        <item name="colorOnSurface">@color/on_surface</item>
-        <item name="android:colorBackground">@color/background</item>
         <item name="android:windowBackground">@color/background</item>
         <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:navigationBarColor">@color/white</item>
-        <item name="android:windowContentTransitions">true</item>
+        <item name="alertDialogTheme">@style/PaperDialog</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:windowBackground">@color/background</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:statusBarColor">@color/colorPrimaryDark</item>
         <item name="android:navigationBarColor">@color/white</item>
         <item name="android:windowContentTransitions">true</item>
+        <item name="alertDialogTheme">@style/PaperDialog</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
-    <!-- ===== 纸片ui 可复用样式 ===== -->
+    <!-- ===== 纸片风 AlertDialog 主题 ===== -->
+    <style name="PaperDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="android:windowBackground">@drawable/shape_dialog_paper</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowAnimationStyle">@style/PaperDialogAnimation</item>
+        <item name="buttonBarPositiveButtonStyle">@style/PaperDialogButton.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/PaperDialogButton.Negative</item>
+        <item name="buttonBarNeutralButtonStyle">@style/PaperDialogButton.Neutral</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="PaperDialogButton.Positive" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">8dp</item>
+        <item name="rippleColor">@color/colorPrimaryVariant</item>
+    </style>
+
+    <style name="PaperDialogButton.Negative" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">15sp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="PaperDialogButton.Neutral" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">15sp</item>
+        <item name="cornerRadius">8dp</item>
+    </style>
+
+    <style name="PaperDialogAnimation" parent="android:Animation.Dialog">
+        <item name="android:windowEnterAnimation">@anim/dialog_enter_anim</item>
+        <item name="android:windowExitAnimation">@anim/dialog_exit_anim</item>
+    </style>
+
+    <!-- ===== 纸片ui 可复用组件样式 ===== -->
 
     <!-- 卡片样式：12dp圆角，柔和阴影，白色背景 -->
     <style name="Widget.App.CardView" parent="Widget.MaterialComponents.CardView">
@@ -64,19 +104,18 @@
         <item name="cardUseCompatPadding">true</item>
     </style>
 
-    <!-- 主按钮：渐变蓝紫背景，12dp圆角，白色文字 -->
+    <!-- 主按钮：粉色背景白色文字，12dp圆角 -->
     <style name="Widget.App.Button" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/white</item>
         <item name="backgroundTint">@color/colorPrimary</item>
         <item name="cornerRadius">12dp</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:elevation">4dp</item>
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- 描边按钮：透明背景，主色描边，12dp圆角 -->
+    <!-- 描边按钮：透明背景粉色描边 -->
     <style name="Widget.App.Button.Outlined" parent="Widget.MaterialComponents.Button.OutlinedButton">
         <item name="android:textColor">@color/colorPrimary</item>
         <item name="cornerRadius">12dp</item>
@@ -85,13 +124,6 @@
         <item name="android:minHeight">48dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textSize">15sp</item>
-    </style>
-
-    <!-- 文字按钮：无描边，主色文字 -->
-    <style name="Widget.App.Button.Text" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@color/colorPrimary</item>
-        <item name="cornerRadius">12dp</item>
-        <item name="android:textAllCaps">false</item>
     </style>
 
     <!-- 文字样式 -->
@@ -120,19 +152,13 @@
 
     <style name="MaterialSearchViewStyle">
         <item name="searchBackground">@color/colorPrimary</item>
-        <item name="searchBackIcon">@drawable/ic_arrow_back_black_24dp</item>
-        <item name="searchCloseIcon">@drawable/ic_clear_black_24dp</item>
         <item name="android:textColor">@color/white</item>
     </style>
 
     <style name="cornerdialog" parent="Theme.AppCompat.Dialog.Alert">
         <item name="android:windowIsFloating">true</item>
         <item name="android:windowBackground">@drawable/shape_card_dialog</item>
-    </style>
-
-    <style name="dialogWindowAnim" mce_bogus="1" parent="android:Animation">
-        <item name="android:windowEnterAnimation">@anim/dialog_enter_anim</item>
-        <item name="android:windowExitAnimation">@anim/dialog_exit_anim</item>
+        <item name="android:windowAnimationStyle">@style/PaperDialogAnimation</item>
     </style>
 
 </resources>

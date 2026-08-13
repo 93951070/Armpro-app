@@ -1,26 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="@dimen/spacing_mlarge">
+    android:padding="20dp">
 
+    <!-- 标题 -->
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="@string/selete_signer_data"
+        android:text="选择签名信息"
         android:textColor="@color/text_primary"
         android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 签名密钥选择 -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="签名密钥"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:layout_marginBottom="6dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_mlarge"
         app:boxCornerRadiusBottomEnd="12dp"
         app:boxCornerRadiusBottomStart="12dp"
         app:boxCornerRadiusTopEnd="12dp"
@@ -32,14 +41,24 @@
             android:id="@+id/signer_key_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:entries="@array/single_dialog_style" />
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- 签名模式选择 -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="签名方案"
+        android:textColor="@color/text_secondary"
+        android:textSize="13sp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="6dp" />
 
     <com.google.android.material.textfield.TextInputLayout
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_middle"
         app:boxCornerRadiusBottomEnd="12dp"
         app:boxCornerRadiusBottomStart="12dp"
         app:boxCornerRadiusTopEnd="12dp"
@@ -51,16 +70,19 @@
             android:id="@+id/signer_mode_spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:entries="@array/signer_mode" />
+            android:entries="@array/signer_mode"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- 提示文字 -->
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_middle"
+        android:layout_marginTop="12dp"
         android:gravity="center"
-        android:text="@string/signer_v2_tips"
-        android:textColor="@color/text_secondary"
+        android:text="V2+V3 签名可提升安装速度并增强安全性"
+        android:textColor="@color/text_hint"
         android:textSize="12sp" />
 
 </LinearLayout>

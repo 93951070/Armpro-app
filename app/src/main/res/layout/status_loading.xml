@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_loading_paper"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingLeft="32dp"
+    android:paddingRight="32dp"
+    android:paddingTop="24dp"
+    android:paddingBottom="20dp">
 
-    <armadillo.studio.widget.ViewLoadingDotsGrow
-        android:layout_width="@dimen/dp_50"
-        android:layout_height="@dimen/dp_40" />
+    <armadillo.studio.widget.ViewPonyRunning
+        android:layout_width="60dp"
+        android:layout_height="60dp" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginTop="12dp"
         android:gravity="center"
-        android:text="@string/dialog_desc"
-        android:textColor="@color/text_secondary"
-        android:textSize="16sp"
+        android:text="努力奔跑中..."
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp"
         android:textStyle="bold" />
+
 </LinearLayout>

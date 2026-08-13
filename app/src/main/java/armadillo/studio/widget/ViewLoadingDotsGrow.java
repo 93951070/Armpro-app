@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2020. Armadillo
- */
-
 package armadillo.studio.widget;
 
 
@@ -23,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
+
+import armadillo.studio.R;
 
 
 public class ViewLoadingDotsGrow extends LinearLayout {
@@ -52,10 +50,13 @@ public class ViewLoadingDotsGrow extends LinearLayout {
     }
 
     private void initView() {
-        int color = Color.GRAY;
+        int color = context.getResources().getColor(R.color.colorPrimary);
         Drawable background = getBackground();
         if (background instanceof ColorDrawable) {
-            color = ((ColorDrawable) background).getColor();
+            int bgColor = ((ColorDrawable) background).getColor();
+            if (bgColor != Color.TRANSPARENT) {
+                color = bgColor;
+            }
         }
         setBackgroundColor(Color.TRANSPARENT);
 
@@ -131,4 +132,3 @@ public class ViewLoadingDotsGrow extends LinearLayout {
 
 
 }
-

@@ -99,7 +99,7 @@ public class RoundCornerDialog extends AlertDialog {
         TextView name = header.findViewById(R.id.name);
         name.setText(String.format("%s(%s)\n%s", getContext().getString(R.string.app_name), BuildConfig.VERSION_NAME, getContext().getString(R.string.dialog_desc)));
         linearLayout.addView(header);
-        Objects.requireNonNull(getWindow()).setWindowAnimations(R.style.dialogWindowAnim);
+        Objects.requireNonNull(getWindow()).setWindowAnimations(R.style.PaperDialogAnimation);
     }
 
     public RoundCornerDialog SetNewView(View view) {
