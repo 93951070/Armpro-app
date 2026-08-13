@@ -341,7 +341,7 @@
         </androidx.core.widget.NestedScrollView>
 
         <!--统计图-->
-        <com.lihang.chart.ChartLineView
+        <com.lihang.chart.view.ChartLineView
             android:id="@+id/chartLineView"
             android:layout_width="match_parent"
             android:layout_height="250dp"
